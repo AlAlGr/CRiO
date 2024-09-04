@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frens</title>
+</head>
+<body>
+    <h1>Мои рефералы</h1>
+    <ul>
+        {% for referral in referrals %}
+            <li>{{ referral.first_name }} {{ referral.last_name }} - <img src="{{ referral.avatar_url }}" alt="Avatar" width="50" height="50"></li>
+        {% endfor %}
+    </ul>
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit">Получить 10% от очков друзей</button>
+    </form>
+    <a href="{% url 'home' %}">Назад</a>
+</body>
+</html>

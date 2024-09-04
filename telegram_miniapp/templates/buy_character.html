@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Купить персонажа</title>
+    <style>
+        body {
+            background-color: #000; /* Задний фон чёрный */
+            color: #fff; /* Цвет текста белый */
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            text-align: center;
+            padding: 30px; /* Увеличенное расстояние сверху и снизу */
+        }
+
+        .header p {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+        }
+
+        .header img {
+            margin-right: 20px;
+            width: 60px;
+            height: 60px;
+        }
+
+        .content {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff; /* Белый фон для контейнера с персонажами */
+            border-radius: 8px;
+        }
+
+        .character-item {
+            border-bottom: 1px solid #333; /* Тонкая чёрная черта между персонажами */
+            padding: 20px 0; /* Увеличенное расстояние между персонажами */
+            display: flex;
+            align-items: flex-start; /* Выровнять элементы по верхнему краю */
+        }
+
+        .character-item img {
+            margin-right: 15px;
+            width: 50px;
+            height: 50px;
+        }
+
+        .character-item .info {
+            color: #000; /* Чёрный цвет текста о персонаже */
+        }
+
+        .character-item .info strong {
+            display: block;
+            font-size: 1.2em;
+        }
+
+        .character-item .info p {
+            margin: 5px 0;
+        }
+
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .button-container button {
+            background-color: #4CAF50; /* Зелёный цвет кнопки */
+            color: white;
+            padding: 15px 30px; /* Увеличенное внутреннее отступы кнопки */
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            cursor: pointer;
+        }
+
+        .button-container button:disabled {
+            background-color: #555; /* Тусклый цвет для неактивной кнопки */
+            cursor: not-allowed;
+        }
+
+        .insufficient-points {
+            font-weight: bold;
+            color: #f00; /* Красный цвет для надписи о недостатке очков */
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        a {
+            display: block;
+            text-align: center;
+            color: #fff;
+            margin: 20px;
+            text-decoration: none;
+            font-size: 1.2em;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <p>
+            <img src="/static/images/free-icon-coin-1489742.png" alt="Points Icon"> <!-- Иконка перед очками -->
+            {{ user.points }}
+        </p>
+    </div>
+
+    <div class="content">
+        {% for character in characters %}
+        <div class="character-item">
+            <img src="/static/images/videokart_{{ character.id }}.png" alt="Character Icon"> <!-- Иконка персонажа -->
+            <div class="info">
+                <strong>{{ character.name }}</strong>
+                <p>Стоимость: {{ character.cost }}</p>
+                <p>Очков/час: {{ character.points_per_hour }}</p>
+                {% if next_character_id == character.id %}
+                    {% if user.points >= character.cost %}
+                        <form method="post" style="display: inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="character_id" value="{{ character.id }}">
+                            <button type="submit">Купить</button>
+                        </form>
+                    {% else %}
+                        <div class="insufficient-points">Недостаточно очков</div>
+                    {% endif %}
+                {% elif user.character_id >= character.id %}
+                    <!-- Ничего не отображаем, если персонаж уже куплен -->
+                {% else %}
+                    <!-- Ничего не отображаем, если персонаж недоступен -->
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <a href="/home2?user_id={{ user.user_id }}">Назад</a>
+</body>
+</html>

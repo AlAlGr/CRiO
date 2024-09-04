@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasks</title>
+</head>
+<body>
+    <h1>Задания</h1>
+
+    <!-- Отображение всех заданий -->
+    <ul>
+        {% for task in tasks %}
+        <li>
+            <h2>{{ task.title }}</h2>
+            <p>{{ task.description }}</p>
+            <p>Вознаграждение: {{ task.reward }}</p>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <!-- Форма добавления нового задания для администратора -->
+    {% if user.is_staff %}
+    <h2>Добавить новое задание</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="text" name="title" placeholder="Название задания" required>
+        <textarea name="description" placeholder="Описание" required></textarea>
+        <input type="file" name="icon" required>
+        <input type="file" name="image">
+        <input type="number" name="reward" placeholder="Вознаграждение" required>
+        <input type="datetime-local" name="start_date" required>
+        <input type="datetime-local" name="end_date" required>
+        <button type="submit">Добавить задание</button>
+    </form>
+    {% endif %}
+</body>
+</html>

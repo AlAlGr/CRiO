@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Привязка кошелька</title>
+</head>
+<body>
+    <h1>Привязка TON Кошелька</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <input type="text" name="wallet_address" placeholder="Адрес кошелька" value="{{ user.ton_wallet }}" required>
+        <button type="submit">Сохранить</button>
+    </form>
+    <a href="{% url 'home' %}">Назад</a>
+</body>
+</html>
