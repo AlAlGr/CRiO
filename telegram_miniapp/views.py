@@ -69,9 +69,9 @@ def home2_view(request: HttpRequest) -> HttpResponse:
     Страница, отображающая имя пользователя, его очки и список персонажей.
     """
     if request.method == 'GET':
-        user_id = request.GET.get('user_id')
+        user_id = int(request.GET.get('user_id'))
         user = User.objects.get(user_id=user_id)
-        character = get_object_or_404(Character, id=user.character_id)
+        character = Character.objects.get(id=user.character_id)
 
         now = timezone.now()
         time_elapsed = (now - user.last_collected).total_seconds()

@@ -15,10 +15,10 @@ class User(models.Model):
     last_name = models.CharField(max_length=150, blank=True, null=True)
     username = models.CharField(max_length=150, blank=True, null=True)
     avatar_url = models.URLField(blank=True, null=True)
-    last_collected = models.DateTimeField(null=True, blank=True)
+    last_collected = models.DateTimeField(null=True, blank=True, auto_now_add=True)
 
     ref_id = models.BigIntegerField(blank=True, null=True)
-    character_id = models.BigIntegerField(default=0)
+    character_id = models.BigIntegerField(default=1)
 
     points = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
