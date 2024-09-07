@@ -6,155 +6,176 @@
     <title>Home</title>
     <style>
         body {
-            background-image: url('/static/images/The-most-unusual-mining-farm-in-the-world-in-photos-00.jpg');
+            background-image: url('/static/images/background.jpg');
+            background-position: center center;
             background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
             font-family: Arial, sans-serif;
+            color: white;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            height: 100vh; /* Высота экрана */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Распределяем элементы по вертикали */
         }
 
         .header {
             display: flex;
-            justify-content: center; /* Центрирование очков по горизонтали */
+            justify-content: space-between;
             align-items: center;
             padding: 10px 20px;
-            background-color: transparent; /* Прозрачность для header */
-        }
-
-        .header .points {
-            display: flex;
-            align-items: center;
-            background-color: transparent; /* Прозрачность для блока с очками */
-            padding: 5px;
-            border-radius: 5px;
-            font-size: 3.5em;
-            font-weight: bold;
-            color: #f9f9f9; /* Цвет для очков */
-        }
-
-        .points img {
-            margin-right: 10px;
-            width: 50px;
-            height: 50px;
-        }
-
-        .content {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            background-color: #f9f9f9; /* Светлый фон */
-            border-radius: 10px;
-            margin-top: 20px;
-            color: #000000; /* Чёрный цвет текста */
             font-size: 1.2em;
+            border-radius: 10px;
+            border: 3px solid white;
+            margin: 20px;
         }
 
-        .content .left,
-        .content .right {
+        .header .left, .header .right {
             flex: 1;
-            text-align: center; /* Центрирование содержимого в каждой части */
-        }
-
-        .content .divider::before {
-            content: "|";
-            display: block;
-            font-size: 2em;
-            color: #000;
-            margin: 0 auto;
-        }
-
-        .character {
-            display: block;
-            margin: 20px auto;
-            width: 70%; /* Увеличенный размер картинки персонажа */
-        }
-
-        .counter {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
             text-align: center;
-            font-size: 1.5em;
-            margin-top: 20px; /* Уменьшили отступ сверху */
-            color: #c0ff00;
         }
 
+        .header .level {
+            color: yellow;
+        }
+
+        .header .character-name {
+            font-size: 1em;
+            margin-right: 10px;
+        }
+
+        .header .squad {
+            color: white;
+        }
+
+        .username {
+            margin: 20px 0;
+            font-size: 1.8em;
+        }
+
+        .points {
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+
+        .coin-image {
+            width: 180px;
+            height: 180px;
+            margin: 20px auto; /* Центрирование монетки с небольшими отступами */
+        }
+
+        .farming-info {
+            font-size: 1.2em;
+            color: yellow;
+        }
+
+        /* Изменено: размещение button-container для корректного отображения */
         .button-container {
-            text-align: center;
-            margin-top: 10px;
-            margin-bottom: 20px; /* Уменьшили отступ снизу для кнопки */
+            margin-top: auto; /* Автоматический отступ сверху для перемещения кнопки вниз */
+            margin-bottom: 20px; /* Нижний отступ */
+            padding: 20px; /* Внутренние отступы для кнопки */
         }
 
         .button-container button {
-            background-color: #eaff00; /* Золотой цвет для активной кнопки */
-            color: #000;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            font-size: 1.2em;
+            background-color: #eaff00;
+            color: black;
+            padding: 15px 20px;
+            border: 2px solid green;
+            border-radius: 10px;
+            font-size: 1.4em;
             cursor: pointer;
+            width: 100%; /* Занимает всю доступную ширину */
+            max-width: 320px; /* Ограничиваем максимальную ширину кнопки */
+            margin: 0 auto; /* Центрирование кнопки */
         }
 
         .button-container button:disabled {
-            background-color: #56574d; /* Тускло-жёлтый цвет для неактивной кнопки */
+            background-color: #56574d;
             cursor: not-allowed;
         }
 
+        .button-container button.active {
+            background-color: #FFD700;
+            color: black;
+        }
+
+        /* Обновлено: фиксируем нижний футер с учётом высоты экрана */
         .footer {
-            position: fixed;
-            bottom: 20px; /* Отступ от нижнего края экрана */
+            position: sticky; /* Закрепляем футер внизу экрана */
+            bottom: 0;
             width: 100%;
-            background-color: #00152e;
-            padding: 20px 0; /* Увеличили высоту */
+            background-color: transparent;
+            padding: 10px 0;
             display: flex;
             justify-content: space-around;
-            border-radius: 10px; /* Скругление */
+            border-radius: 10px;
+            gap: 10px;
+            margin-bottom: 20px; /* Увеличенный нижний отступ */
         }
 
         .footer div {
             text-align: center;
-            font-size: 1.3em; /* Увеличили размер шрифта */
+            font-size: 1.3em;
             font-weight: bold;
             color: #ffffff;
             cursor: pointer;
+            padding: 10px 10px; /* Увеличиваем внутренние отступы */
+            border: 2px solid green;
+            border-radius: 10px;
+            background-color: rgba(0, 0, 0, 0.5);
         }
-        .level-icon {
-        width: 50px; /* Ширина иконки */
-        height: 50px; /* Высота иконки */
-        vertical-align: middle; /* Выравнивание по середине строки с текстом */
-        margin-right: 5px; /* Отступ справа от иконки */
+
+        .footer a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .highlight {
+            color: yellow;
         }
     </style>
 </head>
 <body>
-    {% load custom_filters %}
+     {% load custom_filters %}
     <div class="header">
-        <div class="points">
-            <img src="/static/images/free-icon-coin-1489742.png" alt="Point Icon" class="level-icon"> <!-- Изображение перед очками -->
-            <div>{{ user.points|format_points }}</div>
-        </div>
-    </div>
-
-    <div class="content">
         <div class="left">
-            <strong>{{ character.name }}</strong><br>
-            <img src="/static/images/videokart_{{ character.id }}.png" alt="Level Icon" class="level-icon"> <!-- Иконка слева от Level -->
-            Level {{ character.id }}
+            <div class="character-name">{{ character.name }}</div>
+            <div class="level">Level {{ character.id }}</div>
         </div>
-        <div class="divider"></div> <!-- Добавлен знак "|" -->
         <div class="right">
-            Тут будет сквад
+            <div class="squad">Тут СКВАД</div>
         </div>
     </div>
 
-    <img src="/static/images/videokart_{{ character.id }}.png" alt="Character Image" class="character">
+    <!-- Имя пользователя -->
+    <div class="username">{{ user.first_name }}</div>
 
-    <div class="counter" id="counter">0.0 / {{ max_points }}</div>
+    <!-- Очки пользователя -->
+    <div class="points">{{ user.points|format_points }}</div>
+
+    <!-- Изображение монетки -->
+    <img src="/static/images/free-icon-coin-1489742.png" alt="CRiO Coin" class="coin-image">
+
+    <!-- Кнопка для сборки монет -->
     <div class="button-container">
-        <button id="collect-points-button" disabled>Start farm</button>
+        <button id="collect-points-button" disabled>
+            <div>Farming <span class="highlight">CRiO</span></div>
+            <div>
+                <span id="current-points">{{ current_points }}</span> / {{ max_points }}
+                <span>| {{ time_left_hours }}</span>
+            </div>
+        </button>
     </div>
 
+    <!-- Footer с кнопками -->
     <div class="footer">
-        <a style="text-decoration: none;" href="/buy/character?user_id={{ user.user_id }}"><div>Boosters</div></a>
+        <a href="/buy/character?user_id={{ user.user_id }}">
+            <div>Booster</div>
+        </a>
         <div>Earn</div>
         <div>Invite</div>
         <div>Wallet</div>
@@ -162,54 +183,63 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-    const counterElement = document.getElementById('counter');
-    const collectPointsButton = document.getElementById('collect-points-button');
+            const currentPointsElement = document.getElementById('current-points');
+            const collectPointsButton = document.getElementById('collect-points-button');
 
-    const maxPoints = {{ max_points }};
-    let currentPoints = {{ current_points }};
-    const delay = {{ delay }}; // Убедитесь, что delay передается корректно
+            let currentPoints = parseFloat({{ current_points }});
+            const maxPoints = parseFloat({{ max_points }});
+            const delay = parseFloat({{ delay }});
 
-    function updateCounter() {
-        if (currentPoints < maxPoints) {
-            currentPoints += 0.1;
-            counterElement.textContent = `${currentPoints.toFixed(1)} / ${maxPoints}`;
+            function updateCounter() {
+                if (currentPoints < maxPoints) {
+                    currentPoints += 0.1;
+                    if (currentPoints > maxPoints) {
+                        currentPoints = maxPoints;
+                    }
 
-            if (currentPoints > maxPoints) {
-                collectPointsButton.disabled = false;
-                collectPointsButton.textContent = 'Claim';
-            } else {
-                setTimeout(updateCounter, delay); // Замените {{ delay }} на delay
+                    currentPointsElement.textContent = currentPoints.toFixed(1);
+
+                    if (currentPoints >= maxPoints) {
+                        collectPointsButton.disabled = false;
+                        collectPointsButton.classList.add('active');
+                        collectPointsButton.innerHTML = `
+                            <div>Claim ${maxPoints} CRiO</div>
+                        `;
+                    } else {
+                        setTimeout(updateCounter, delay);
+                    }
+                }
             }
-        }
-    }
 
-    updateCounter();
+            updateCounter();
 
-    collectPointsButton.addEventListener('click', function() {
-        fetch('{% url "collect_points" %}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': '{{ csrf_token }}'
-            },
-            body: JSON.stringify({ 'user_id': '{{ user.user_id }}', 'character_id': {{ character.id }} })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                currentPoints = 0.0;
-                counterElement.textContent = `0.0 / ${maxPoints}`;
-                collectPointsButton.disabled = true;
-                collectPointsButton.textContent = 'Собрать очки (недоступно)';
-                location.reload();
-            } else {
-                console.error('Ошибка при сборе очков');
-            }
-        })
-        .catch(error => console.error('Ошибка:', error));
-    });
-});
+            collectPointsButton.addEventListener('click', function() {
+                fetch('{% url "collect_points" %}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({ 'user_id': '{{ user.user_id }}', 'character_id': {{ character.id }} })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        currentPoints = 0.0;
+                        currentPointsElement.textContent = 0.0;
+                        collectPointsButton.disabled = true;
+                        collectPointsButton.classList.remove('active');
+                        updateCounter();
+                        location.reload();
+                    } else {
+                        console.error('Error collecting points');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            });
 
+        });
     </script>
+
 </body>
 </html>

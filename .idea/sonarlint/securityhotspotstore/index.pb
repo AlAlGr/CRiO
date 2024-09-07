@@ -164,3 +164,7 @@ w
 G.idea/sonarlint/issuestore/8/8/881221e3cf90a1db4dc5a065fe4803d8bfd19869,4/2/4269c05da17adc9b6537ec484669df33dd41332b
 w
 G.idea/sonarlint/issuestore/8/a/8a8874212ee2fe82c0bbac62b6c9d20089b9d126,9/0/90997b39dccf3b260ab93890eccc507ae52623d7
+m
+=telegram_miniapp/migrations/0009_alter_user_last_collected.py,9/5/95791cc7067a771f5bca28075d526ea9882c7f51
+k
+;telegram_miniapp/migrations/0010_alter_user_character_id.py,d/c/dc1a5089e02b027c358987d84253f0ca7dbc00a0

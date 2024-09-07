@@ -6,8 +6,8 @@
     <title>Купить персонажа</title>
     <style>
         body {
-            background-color: #000; /* Задний фон чёрный */
-            color: #fff; /* Цвет текста белый */
+            background-color: #000; /* Чёрный фон */
+            color: #fff; /* Белый цвет текста */
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
@@ -15,116 +15,121 @@
 
         .header {
             text-align: center;
-            padding: 30px; /* Увеличенное расстояние сверху и снизу */
+            padding: 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .header img {
+            margin-right: 10px;
+            width: 40px;
+            height: 40px;
         }
 
         .header p {
             font-size: 2.5em;
             font-weight: bold;
             margin: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-        }
-
-        .header img {
-            margin-right: 20px;
-            width: 60px;
-            height: 60px;
         }
 
         .content {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff; /* Белый фон для контейнера с персонажами */
-            border-radius: 8px;
+            display: flex;
+            flex-direction: column; /* Теперь карточки будут выстраиваться в столбик */
+            align-items: center;
+            gap: 10px;
+            margin: 20px;
         }
 
         .character-item {
-            border-bottom: 1px solid #333; /* Тонкая чёрная черта между персонажами */
-            padding: 20px 0; /* Увеличенное расстояние между персонажами */
+            background-color: #333;
+            color: #fff;
+            border: 3px solid #FFFFFF;
+            border-radius: 10px;
+            width: 300px; /* Ширина карточки фиксирована */
+            text-align: center;
+            padding: 10px;
+            position: relative;
             display: flex;
-            align-items: flex-start; /* Выровнять элементы по верхнему краю */
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .character-item img {
-            margin-right: 15px;
-            width: 50px;
-            height: 50px;
+            width: 100%;
+            height: auto;
+            border-bottom: 1px solid #fff;
+            padding-bottom: 10px;
         }
 
-        .character-item .info {
-            color: #000; /* Чёрный цвет текста о персонаже */
+        .character-name {
+            font-weight: bold;
+            font-size: 1.4em;
+            margin-bottom: 10px;
         }
 
-        .character-item .info strong {
-            display: block;
-            font-size: 1.2em;
+        .character-info {
+            margin-bottom: 10px;
+            font-weight: bold;
+            font-size: 1.1em;
         }
 
-        .character-item .info p {
+        .character-info p {
             margin: 5px 0;
         }
 
         .button-container {
-            text-align: center;
-            margin-top: 20px;
+            margin-top: 10px;
         }
 
         .button-container button {
-            background-color: #4CAF50; /* Зелёный цвет кнопки */
+            width: 100%;
+            background-color: #4CAF50;
             color: white;
-            padding: 15px 30px; /* Увеличенное внутреннее отступы кнопки */
+            padding: 10px;
             border: none;
             border-radius: 5px;
-            font-size: 1.2em;
+            font-size: 1em;
             cursor: pointer;
         }
 
         .button-container button:disabled {
-            background-color: #555; /* Тусклый цвет для неактивной кнопки */
+            background-color: #555;
             cursor: not-allowed;
         }
 
         .insufficient-points {
             font-weight: bold;
-            color: #f00; /* Красный цвет для надписи о недостатке очков */
+            color: #f00;
             text-align: center;
             margin-top: 10px;
         }
 
-        a {
-            display: block;
-            text-align: center;
-            color: #fff;
-            margin: 20px;
-            text-decoration: none;
-            font-size: 1.2em;
+        .highlight {
+            color: yellow; /* Жёлтый цвет для CRiO */
         }
 
-        a:hover {
-            text-decoration: underline;
-        }
     </style>
 </head>
 <body>
+    {% load custom_filters %}
+    <!-- Верхний блок с изображением монетки и количеством очков -->
     <div class="header">
-        <p>
-            <img src="/static/images/free-icon-coin-1489742.png" alt="Points Icon"> <!-- Иконка перед очками -->
-            {{ user.points }}
-        </p>
+        <img src="/static/images/free-icon-coin-1489742.png" alt="CRiO Coin">
+        <p>{{ user.points|format_points }}</p>
     </div>
 
+    <!-- Контент с персонажами -->
     <div class="content">
         {% for character in characters %}
         <div class="character-item">
-            <img src="/static/images/videokart_{{ character.id }}.png" alt="Character Icon"> <!-- Иконка персонажа -->
-            <div class="info">
-                <strong>{{ character.name }}</strong>
+            <div class="character-name">{{ character.name }}</div> <!-- Название персонажа -->
+            <img src="/static/images/videokart_{{ character.id }}.jpg" alt="Character Icon"> <!-- Иконка персонажа -->
+            <div class="character-info">
                 <p>Стоимость: {{ character.cost }}</p>
-                <p>Очков/час: {{ character.points_per_hour }}</p>
+                <p><span class="highlight">CRiO</span> в час: {{ character.points_per_hour }}</p>
+            </div>
+            <div class="button-container">
                 {% if next_character_id == character.id %}
                     {% if user.points >= character.cost %}
                         <form method="post" style="display: inline;">
@@ -133,7 +138,7 @@
                             <button type="submit">Купить</button>
                         </form>
                     {% else %}
-                        <div class="insufficient-points">Недостаточно очков</div>
+                <div class="insufficient-points"><span style="font-size: 1.3em;">Недостаточно <span class="highlight">CRiO</span> TOKEN</span></div>
                     {% endif %}
                 {% elif user.character_id >= character.id %}
                     <!-- Ничего не отображаем, если персонаж уже куплен -->
@@ -145,6 +150,17 @@
         {% endfor %}
     </div>
 
-    <a href="/home2?user_id={{ user.user_id }}">Назад</a>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+        // Инициализация Telegram Web App
+        const tg = window.Telegram.WebApp;
+
+        // Активируем кнопку "Назад"
+        tg.BackButton.show();  // Показываем кнопку
+
+        tg.BackButton.onClick(() => {
+             window.history.back();
+        });
+    </script>
 </body>
 </html>

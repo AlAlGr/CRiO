@@ -1,4 +1,4 @@
 
-Rpython:S1481$".Replace unused local variable "user" with "_".(È‚ Ûıÿÿÿÿ8úËëš2
-Upython:S1481$"1Replace unused local variable "created" with "_".(È‚ Ûıÿÿÿÿ8úËëš2
-[python:S57546"<Specify an exception class to catch or reraise the exception(ˆÊÉ·8úËëš2
+Upython:S1481="1Replace unused local variable "created" with "_".(È‚ Ûıÿÿÿÿ8šıºµœ2
+Rpython:S1481=".Replace unused local variable "user" with "_".(È‚ Ûıÿÿÿÿ8›ıºµœ2
+[python:S5754O"<Specify an exception class to catch or reraise the exception(ˆÊÉ·8›ıºµœ2

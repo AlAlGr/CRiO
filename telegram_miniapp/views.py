@@ -68,6 +68,14 @@ def home2_view(request: HttpRequest) -> HttpResponse:
     """
     Страница, отображающая имя пользователя, его очки и список персонажей.
     """
+
+    def convert_seconds_to_time(seconds: int):
+        hours = seconds // 3600  # Получаем количество полных часов
+        minutes = (seconds % 3600) // 60  # Остаток от деления на 3600 преобразуем в минуты
+
+        # Форматируем строку с ведущими нулями для часов и минут
+        return f"{hours:02}h {minutes:02}m"
+
     if request.method == 'GET':
         user_id = int(request.GET.get('user_id'))
         user = User.objects.get(user_id=user_id)
@@ -77,6 +85,9 @@ def home2_view(request: HttpRequest) -> HttpResponse:
         time_elapsed = (now - user.last_collected).total_seconds()
         if time_elapsed > 28800.0:
             time_elapsed = 28800.0
+
+        time_left_sec = 28800 - int(time_elapsed)  # 8 часов - сколько прошло уже
+        time_left_hours = convert_seconds_to_time(time_left_sec)
 
         # Максимум очков за 8 часов
         max_points = character.points_per_hour * 8
@@ -95,8 +106,9 @@ def home2_view(request: HttpRequest) -> HttpResponse:
             'character': character,
             'progress': progress,
             'max_points': max_points,
-            'current_points': current_points,
-            'delay': delay
+            'current_points': current_points - 0.1,
+            'delay': delay,
+            'time_left_hours': time_left_hours
         }
 
         return render(request, 'home2.html', context)
