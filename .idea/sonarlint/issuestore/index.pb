@@ -168,3 +168,13 @@ m
 =telegram_miniapp/migrations/0009_alter_user_last_collected.py,9/5/95791cc7067a771f5bca28075d526ea9882c7f51
 k
 ;telegram_miniapp/migrations/0010_alter_user_character_id.py,d/c/dc1a5089e02b027c358987d84253f0ca7dbc00a0
+]
+-telegram_miniapp/static/images/background.jpg,b/b/bb692e754b5aec081ad2c20000c5b64ac953a5ca
+^
+.telegram_miniapp/static/images/videokart_1.jpg,5/d/5d8f15f4d1006e163ef3652f1ff73f490abd5b6f
+^
+.telegram_miniapp/static/images/videokart_2.jpg,6/c/6c1a7b24414f2725e349e75326099cebaa3a73a8
+^
+.telegram_miniapp/static/images/videokart_3.jpg,9/b/9b6e069c895ff260b4332ae5471d5e899bff2a54
+^
+.telegram_miniapp/static/images/videokart_4.jpg,c/1/c1d6b5c932cae83460d454d1babad19e03fbaf25

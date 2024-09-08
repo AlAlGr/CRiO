@@ -10,6 +10,7 @@ from aiogram.filters import Command
 from asgiref.sync import sync_to_async
 from django.utils import timezone
 
+from telegram_miniapp.connector import get_connector
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 django.setup()
@@ -30,7 +31,7 @@ dp = Dispatcher()
 
 async def check_and_notify_users():
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text='Открыть Mini App', url=MINI_APP_URL)]
+        [InlineKeyboardButton(text='Собрать CRiO', url=MINI_APP_URL)]
         ])
 
     while True:
@@ -41,10 +42,10 @@ async def check_and_notify_users():
             if user.last_collected:
                 time_elapsed = (now - user.last_collected).total_seconds()  # Время, прошедшее с последнего сбора
 
-                if time_elapsed >= 8 * 60 * 60:  # 8 часов в секундах
+                if 8 * 60 * 60 <= time_elapsed <= (8 * 60 * 60) + 100 or (8 * 60 * 60) * 2 <= time_elapsed <= ((8 * 60 * 60) * 2) + 100:  # 8 часов в секундах
                     try:
                         # Отправляем сообщение пользователю
-                        await bot.send_message(user.user_id, "Пора собрать монеты!", reply_markup=keyboard)
+                        await bot.send_message(user.user_id, "Забери CRiO Token зайди в Booster", reply_markup=keyboard)
 
                     except Exception as e:
                         # Обработка других исключений
@@ -75,14 +76,17 @@ async def start_deep_link(message: types.Message, command: CommandObject):
 
     if ref_id is not None:
         try:
-            await bot.send_message(int(ref_id), f"Отлично. По твоей ссылке зарегистрировался (-лась) {message.from_user.full_name} @{message.from_user.username}")
+            await bot.send_message(int(ref_id), f"Отлично. По твоей ссылке зарегистрировался (-лась) {message.from_user.full_name}")
         except:
             pass
 
-    await message.answer("Привет! Нажмите кнопку ниже, чтобы открыть наш Mini App", reply_markup=keyboard)
+    await message.answer("Привет! Нажмите кнопку ниже, и начнется автоматический фарминг CRiO TOKEN. Бот вам отправит сообщение через 8 часов , чтоб вы забрали свои токены .", reply_markup=keyboard)
 
 @dp.message(CommandStart())
-async def start_deep_link(message: types.Message):
+async def start(message: types.Message):
+    connector = await sync_to_async(get_connector)(message.chat.id)
+    wallets = await sync_to_async(connector.get_wallets)()
+    print(wallets)
     user, created = await sync_to_async(User.objects.get_or_create)(
         user_id=message.chat.id,
         defaults={
@@ -98,7 +102,7 @@ async def start_deep_link(message: types.Message):
         [InlineKeyboardButton(text='Пригласить друга', callback_data='invite')]
     ])
 
-    await message.answer("Привет! Нажмите кнопку ниже, чтобы открыть наш Mini App", reply_markup=keyboard)
+    await message.answer("Привет! Нажмите кнопку ниже, и начнется автоматический фарминг CRiO TOKEN. Бот вам отправит сообщение через 8 часов , чтоб вы забрали свои токены .", reply_markup=keyboard)
 
 @dp.callback_query(F.data == 'invite')
 async def invite_friends(callback_query: types.CallbackQuery):

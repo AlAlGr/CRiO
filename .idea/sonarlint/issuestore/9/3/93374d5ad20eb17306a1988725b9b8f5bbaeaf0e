@@ -1,4 +1,7 @@
 
+|python:S1192!"XDefine a constant instead of duplicating this literal 'ÐžÑ‚ÐºÑ€Ñ‹Ñ‚ÑŒ Mini App' 3 times.(£Ìæüýÿÿÿÿ8¶°ÿØœ2
 Upython:S1481="1Replace unused local variable "created" with "_".(È‚ Ûýÿÿÿÿ8šýºµœ2
 Rpython:S1481=".Replace unused local variable "user" with "_".(È‚ Ûýÿÿÿÿ8›ýºµœ2
 [python:S5754O"<Specify an exception class to catch or reraise the exception(ˆÊÉ·8›ýºµœ2
+Upython:S1481V"1Replace unused local variable "created" with "_".(È‚ Ûýÿÿÿÿ8¿°ÿØœ2
+Rpython:S1481V".Replace unused local variable "user" with "_".(È‚ Ûýÿÿÿÿ8Á°ÿØœ2

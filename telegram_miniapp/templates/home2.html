@@ -141,6 +141,21 @@
 </head>
 <body>
      {% load custom_filters %}
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+                // Обработчик события возврата на страницу
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted || window.performance && window.performance.navigation.type === 2) {
+                // Если пользователь вернулся на страницу или она загружена из кэша
+                window.location.reload();  // Перезагружаем страницу
+            }
+        });
+            // Инициализация Telegram Web App
+        const tg = window.Telegram.WebApp;
+
+        tg.BackButton.hide();  // Убираем кнопку
+    </script>
+
     <div class="header">
         <div class="left">
             <div class="character-name">{{ character.name }}</div>

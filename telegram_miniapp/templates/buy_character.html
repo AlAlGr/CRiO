@@ -155,12 +155,14 @@
         // Инициализация Telegram Web App
         const tg = window.Telegram.WebApp;
 
-        // Активируем кнопку "Назад"
-        tg.BackButton.show();  // Показываем кнопку
+        // Показываем кнопку "Назад"
+        tg.BackButton.show();
 
+        // Обрабатываем нажатие на кнопку "Назад"
         tg.BackButton.onClick(() => {
-             window.history.back();
+            window.history.back();
         });
     </script>
+
 </body>
 </html>

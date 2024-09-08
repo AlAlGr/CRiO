@@ -5,13 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Привязка кошелька</title>
 </head>
-<body>
+<body style="background-color: white;">
     <h1>Привязка TON Кошелька</h1>
-    <form method="POST">
-        {% csrf_token %}
-        <input type="text" name="wallet_address" placeholder="Адрес кошелька" value="{{ user.ton_wallet }}" required>
-        <button type="submit">Сохранить</button>
-    </form>
-    <a href="{% url 'home' %}">Назад</a>
+    <a href="{{ connect_url }}">}Connect</a>
 </body>
 </html>

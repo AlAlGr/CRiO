@@ -1,3 +1,4 @@
+import asyncio
 import json
 
 from django.contrib.auth.decorators import user_passes_test
@@ -7,6 +8,7 @@ from django.utils import timezone
 from django.db.models import Sum
 from django.views.decorators.csrf import csrf_exempt
 
+from .connector import get_connector
 from .models import User, Task, Wallet, Character, Improvement
 
 
@@ -185,16 +187,35 @@ def wallet_view(request: HttpRequest) -> HttpResponse:
     """
     Страница привязки TON-кошелька.
     """
-    user = get_object_or_404(User, user_id=request.GET.get('id'))
+    user_id = request.GET.get('user_id')
+    user = User.objects.get(user_id=user_id)
+    connector = get_connector(user_id)
+    connected = asyncio.run(connector.restore_connection())
+    already_connect = False
 
-    if request.method == 'POST':
-        wallet_address = request.POST.get('wallet_address')
-        if wallet_address:
-            Wallet.objects.update_or_create(user=user, defaults={'wallet_address': wallet_address})
+    if connected:
+        print(connected)
+        already_connect = True
+
+    else:
+        wallets_list = connector.get_wallets()
+        wallet = None
+
+        for w in wallets_list:
+            if w['name'] == "Wallet":
+                wallet = w
+
+        if wallet is None:
+            raise Exception(f'Unknown wallet: Wallet')
+
+        connect_url = asyncio.run(connector.connect(wallet))
+        print(connect_url)
 
     context = {
         'user': user,
-        'wallet': user.wallet if hasattr(user, 'wallet') else None
+        'wallet': "sdsada",
+        'connect_url': connect_url,
+        'connected': already_connect,
     }
     return render(request, 'wallet.html', context)
 
