@@ -9,7 +9,7 @@ from django.db.models import Sum
 from django.views.decorators.csrf import csrf_exempt
 
 from .connector import get_connector
-from .models import User, Task, Wallet, Character, Improvement
+from .models import User, Task, Wallet, Character, Improvement, Booster
 
 
 def get_or_create_user(data: dict) -> User:
@@ -92,7 +92,7 @@ def home2_view(request: HttpRequest) -> HttpResponse:
         time_left_hours = convert_seconds_to_time(time_left_sec)
 
         # Максимум очков за 8 часов
-        max_points = character.points_per_hour * 8
+        max_points = user.points_per_hour * 8
 
         # Текущий прогресс в заполнении
         progress = min(time_elapsed / 28800, 1) * 100  # 28800 секунд = 8 часов
@@ -160,6 +160,29 @@ def buy_character_view(request):
     }
 
     return render(request, 'buy_character.html', context)
+
+def buy_boosters_view(request):
+    user_id = request.GET.get('user_id')
+    user = User.objects.get(user_id=user_id)
+
+    boosters = Booster.objects.all()
+
+    next_booster_id = user.booster_id + 1
+
+    if request.method == 'POST':
+        booster_id = int(request.POST.get('booster_id'))
+        booster = Booster.objects.get(id=booster_id)
+
+        if user.buy_boosters(booster):
+            return redirect(f'/home2/?user_id={user_id}')
+
+    context = {
+        'user': user,
+        'boosters': boosters,
+        "next_booster_id": next_booster_id
+    }
+
+    return render(request, 'buy_boosters.html', context)
 
 
 def collect_points_view(request):

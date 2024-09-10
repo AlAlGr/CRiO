@@ -178,3 +178,7 @@ k
 .telegram_miniapp/static/images/videokart_3.jpg,9/b/9b6e069c895ff260b4332ae5471d5e899bff2a54
 ^
 .telegram_miniapp/static/images/videokart_4.jpg,c/1/c1d6b5c932cae83460d454d1babad19e03fbaf25
+N
+telegram_miniapp/tc_storage.py,d/a/da95a89b3fcdd15eea9c89783d41c3a2a9d4cab8
+M
+telegram_miniapp/connector.py,2/9/295916f642373760c48d28db2123163d1dec8f2e

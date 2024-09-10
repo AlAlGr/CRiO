@@ -28,12 +28,16 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
+    "68e0-38-180-206-248.ngrok-free.app",
     'b6a6-185-238-74-14.ngrok-free.app',
+    'f87c-185-238-74-14.ngrok-free.app'
 
 ]
 
 CSRF_TRUSTED_ORIGINS = [
+    "https://68e0-38-180-206-248.ngrok-free.app"
     'https://b6a6-185-238-74-14.ngrok-free.app',  # Ваш домен
+    'https://f87c-185-238-74-14.ngrok-free.app',
 ]
 
 

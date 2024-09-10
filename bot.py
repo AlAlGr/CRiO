@@ -86,7 +86,6 @@ async def start_deep_link(message: types.Message, command: CommandObject):
 async def start(message: types.Message):
     connector = await sync_to_async(get_connector)(message.chat.id)
     wallets = await sync_to_async(connector.get_wallets)()
-    print(wallets)
     user, created = await sync_to_async(User.objects.get_or_create)(
         user_id=message.chat.id,
         defaults={

@@ -29,6 +29,7 @@ urlpatterns = [
     path('buy-improvement/<int:improvement_id>/', views.buy_improvement_view, name='buy_improvement'),
     path('save_user/', views.save_user, name='save_user'),
     path('buy/character/', views.buy_character_view, name='buy_character'),
+    path('buy/booster/', views.buy_boosters_view, name='buy_booster'),
     path('collect_points/', views.collect_points_view, name='collect_points'),
 ]
 

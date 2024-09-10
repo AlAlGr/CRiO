@@ -63,8 +63,8 @@
         }
 
         .coin-image {
-            width: 180px;
-            height: 180px;
+            width: 220px;
+            height: 220px;
             margin: 20px auto; /* Центрирование монетки с небольшими отступами */
         }
 
@@ -119,7 +119,7 @@
 
         .footer div {
             text-align: center;
-            font-size: 1.3em;
+            font-size: 0.9em;
             font-weight: bold;
             color: #ffffff;
             cursor: pointer;
@@ -173,7 +173,7 @@
     <div class="points">{{ user.points|format_points }}</div>
 
     <!-- Изображение монетки -->
-    <img src="/static/images/free-icon-coin-1489742.png" alt="CRiO Coin" class="coin-image">
+    <img src="/static/images/cryptoner_{{ character.id }}.jpg" alt="CRiO Coin" class="coin-image">
 
     <!-- Кнопка для сборки монет -->
     <div class="button-container">
@@ -189,10 +189,13 @@
     <!-- Footer с кнопками -->
     <div class="footer">
         <a href="/buy/character?user_id={{ user.user_id }}">
-            <div>Booster</div>
+            <div>Cryptoners</div>
+        </a>
+        <a href="/buy/booster?user_id={{ user.user_id }}">
+            <div>Boost</div>
         </a>
         <div>Earn</div>
-        <div>Invite</div>
+        <div>Frens</div>
         <div>Wallet</div>
     </div>
 

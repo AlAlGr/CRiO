@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Task, Character, Wallet
+from .models import User, Task, Character, Wallet, Booster
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
@@ -25,6 +25,14 @@ class CharacterAdmin(admin.ModelAdmin):
     Класс для управления моделью персонажа в админке.
     """
     list_display = ('name', 'cost', 'points_per_hour')
+
+@admin.register(Booster)
+class BoosterAdmin(admin.ModelAdmin):
+    """
+    Класс для управления моделью улучшения в админке.
+    """
+    list_display = ('name', 'cost', 'points_per_hour')
+
 
 @admin.register(Wallet)
 class WalletAdmin(admin.ModelAdmin):

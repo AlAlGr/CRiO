@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Купить персонажа</title>
+    <title>Купить улучшения</title>
     <style>
         body {
             background-color: #000; /* Чёрный фон */
@@ -35,9 +35,9 @@
 
         .content {
             display: flex;
-            flex-direction: column; /* Теперь карточки будут выстраиваться в столбик */
-            align-items: center;
-            gap: 10px;
+            flex-wrap: wrap; /* Flexbox с возможностью переносов */
+            justify-content: center; /* Выравнивание карточек по центру */
+            gap: 10px; /* Отступы между карточками */
             margin: 20px;
         }
 
@@ -46,7 +46,7 @@
             color: #fff;
             border: 3px solid #FFFFFF;
             border-radius: 10px;
-            width: 300px; /* Ширина карточки фиксирована */
+            width: 45%; /* Фиксированная ширина 45%, чтобы 2 карточки помещались в ряд */
             text-align: center;
             padding: 10px;
             position: relative;
@@ -109,6 +109,12 @@
             color: yellow; /* Жёлтый цвет для CRiO */
         }
 
+        /* Адаптация для экранов меньшего размера */
+        @media (max-width: 768px) {
+            .character-item {
+                width: 100%; /* На экранах меньше 768px карточки растягиваются на всю ширину */
+            }
+        }
     </style>
 </head>
 <body>
@@ -121,26 +127,26 @@
 
     <!-- Контент с персонажами -->
     <div class="content">
-        {% for character in characters %}
+        {% for booster in boosters %}
         <div class="character-item">
-            <div class="character-name">{{ character.name }}</div> <!-- Название персонажа -->
-            <img src="/static/images/cryptoner_{{ character.id }}.jpg" alt="Character Icon"> <!-- Иконка персонажа -->
+            <div class="character-name">{{ booster.name }}</div> <!-- Название персонажа -->
+            <img src="/static/images/boosters_{{ booster.id }}.jpg" alt="Character Icon"> <!-- Иконка персонажа -->
             <div class="character-info">
-                <p>Стоимость: {{ character.cost }}</p>
-                <p><span class="highlight">CRiO</span> в час: {{ character.points_per_hour }}</p>
+                <p>Стоимость: {{ booster.cost }}</p>
+                <p>+ <span class="highlight">CRiO</span> в час: {{ booster.points_per_hour }}</p>
             </div>
             <div class="button-container">
-                {% if next_character_id == character.id %}
-                    {% if user.points >= character.cost %}
+                {% if next_booster_id == booster.id %}
+                    {% if user.points >= booster.cost %}
                         <form method="post" style="display: inline;">
                             {% csrf_token %}
-                            <input type="hidden" name="character_id" value="{{ character.id }}">
+                            <input type="hidden" name="booster_id" value="{{ booster.id }}">
                             <button type="submit">Купить</button>
                         </form>
                     {% else %}
-                <div class="insufficient-points"><span style="font-size: 1.3em;">Недостаточно <span class="highlight">CRiO</span> TOKEN</span></div>
+                        <div class="insufficient-points"><span style="font-size: 1.3em;">Недостаточно <span class="highlight">CRiO</span> TOKEN</span></div>
                     {% endif %}
-                {% elif user.character_id >= character.id %}
+                {% elif user.booster_id >= booster.id %}
                     <!-- Ничего не отображаем, если персонаж уже куплен -->
                 {% else %}
                     <!-- Ничего не отображаем, если персонаж недоступен -->
