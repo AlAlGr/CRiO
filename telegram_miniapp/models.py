@@ -132,11 +132,10 @@ class Task(models.Model):
         return self.title
 
 class Wallet(models.Model):
-    """
-    Модель для хранения данных о привязанном TON-кошельке.
-    """
-    user: User = models.OneToOneField(User, on_delete=models.CASCADE, related_name='wallet')
-    wallet_address: str = models.CharField(max_length=64)
+    user_id = models.BigIntegerField(unique=True, null=True)
+    wallet_address = models.CharField(max_length=255, blank=True, null=True)
+    is_connected = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.user.first_name} {self.user.last_name} - {self.wallet_address}"
+        return f"WalletConnection(user_id={self.user_id}, is_connected={self.is_connected})"
+

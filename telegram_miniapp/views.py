@@ -1,15 +1,20 @@
 import asyncio
 import json
+import threading
 
+from asgiref.sync import async_to_sync, sync_to_async
 from django.contrib.auth.decorators import user_passes_test
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.db.models import Sum
 from django.views.decorators.csrf import csrf_exempt
+from pytoniq_core import Address
 
 from .connector import get_connector
+from telegram_miniapp.tc_storage import TcStorage
 from .models import User, Task, Wallet, Character, Improvement, Booster
+from bot import BOT_URL, command_wallet
 
 
 def get_or_create_user(data: dict) -> User:
@@ -208,39 +213,38 @@ def collect_points_view(request):
 
 def wallet_view(request: HttpRequest) -> HttpResponse:
     """
-    Страница привязки TON-кошелька.
+    Синхронная страница привязки TON-кошелька.
     """
-    user_id = request.GET.get('user_id')
-    user = User.objects.get(user_id=user_id)
+    user_id = int(request.GET.get('user_id'))
+    wallet_address = "00000000000000000000000000000000000000000"
+    connected = False
+
     connector = get_connector(user_id)
-    connected = asyncio.run(connector.restore_connection())
-    already_connect = False
+    connected = async_to_sync(connector.restore_connection)()
 
     if connected:
-        print(connected)
-        already_connect = True
-
-    else:
-        wallets_list = connector.get_wallets()
-        wallet = None
-
-        for w in wallets_list:
-            if w['name'] == "Wallet":
-                wallet = w
-
-        if wallet is None:
-            raise Exception(f'Unknown wallet: Wallet')
-
-        connect_url = asyncio.run(connector.connect(wallet))
-        print(connect_url)
+        wallet_address = connector.account.address
+        wallet_address = Address(wallet_address).to_str(is_bounceable=False)
+        connected = True
 
     context = {
-        'user': user,
-        'wallet': "sdsada",
-        'connect_url': connect_url,
-        'connected': already_connect,
+        'connected': connected,
+        'wallet_address': f"{wallet_address[:8]} ...",
+        'bot_url': BOT_URL,
+        'user_id': user_id
     }
+
     return render(request, 'wallet.html', context)
+
+def redirect_to_bot_wallet(request) -> JsonResponse:
+    if request.method == "POST":
+        data = json.loads(request.body)
+        chat_id = data.get('user_id')
+
+        async_to_sync(command_wallet)(chat_id)
+
+        return JsonResponse({'success': True, 'chat_id': chat_id})
+    return JsonResponse({'success': False}, status=400)
 
 
 def is_admin(user: User) -> bool:

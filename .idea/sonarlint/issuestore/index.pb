@@ -182,3 +182,31 @@ N
 telegram_miniapp/tc_storage.py,d/a/da95a89b3fcdd15eea9c89783d41c3a2a9d4cab8
 M
 telegram_miniapp/connector.py,2/9/295916f642373760c48d28db2123163d1dec8f2e
+]
+-telegram_miniapp/static/images/boosters_3.jpg,8/f/8f33a346df30dbe4a57c6e17f7ab1bd569513b93
+]
+-telegram_miniapp/static/images/boosters_2.jpg,6/7/677353acd60f80e4d7c7cd5f1e3328ab8f38c731
+]
+-telegram_miniapp/static/images/boosters_1.jpg,1/8/183cf2c5785be6e79702f77527142ed7a96922af
+n
+>telegram_miniapp/migrations/0013_alter_user_points_per_hour.py,6/4/641aadf71518a82db75bb5de8b2cbb2163eb53c1
+n
+>telegram_miniapp/migrations/0014_alter_user_points_per_hour.py,5/1/51140d6687a20d6faec2c6995000f5202bd66575
+^
+.telegram_miniapp/static/images/cryptoner_4.jpg,3/4/344a0ee5b6b66b7b21611482d0c2ff394386b438
+^
+.telegram_miniapp/static/images/cryptoner_3.jpg,a/b/abc68078856928feb209013385d6c9bc1a69ba29
+^
+.telegram_miniapp/static/images/cryptoner_2.jpg,5/8/58031d82fcae2fa9f70b5d251b0f9667a1d95d32
+^
+.telegram_miniapp/static/images/cryptoner_1.jpg,a/0/a06698e77ba9a05b37263dcd879ed793f53585f3
+k
+;telegram_miniapp/migrations/0015_booster_user_booster_id.py,7/3/7360427173d4e649c8575db007f87b1e32b1ee85
+h
+8telegram_miniapp/migrations/0011_user_points_per_hour.py,7/9/79dba27616927a548de4913c12482e81c93b6233
+n
+>telegram_miniapp/migrations/0012_alter_user_points_per_hour.py,8/8/8808fa0f112006e6bfd5cbc8236ab392ed22949a
+]
+-telegram_miniapp/static/images/boosters_4.jpg,b/3/b33a99d539f496f56b2e0d3f97360c0737dd179b
+\
+,telegram_miniapp/templates/buy_boosters.html,1/f/1f61454c76ede00168491275193968ec618525c7

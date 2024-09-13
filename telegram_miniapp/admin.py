@@ -39,5 +39,4 @@ class WalletAdmin(admin.ModelAdmin):
     """
     Класс для управления моделью кошелька в админке.
     """
-    list_display = ('user', 'wallet_address')
-    search_fields = ('user__username', 'wallet_address')
+    list_display = ('user_id', 'wallet_address')
