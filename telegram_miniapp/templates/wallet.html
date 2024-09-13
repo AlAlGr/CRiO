@@ -3,10 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Привязка кошелька</title>
+    <title>Wallet</title>
+    <style>
+        body {
+            background-color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+            margin: 0;
+        }
+        .button {
+            background-color: white;
+            color: black;
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-align: center;
+        }
+        .checkmark {
+            font-size: 50px;
+        }
+    </style>
 </head>
-<body style="background-color: white;">
-    <h1>Привязка TON Кошелька</h1>
-    <a href="{{ connect_url }}">}Connect</a>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+        // Инициализация Telegram Web App
+        const tg = window.Telegram.WebApp;
+
+        // Показываем кнопку "Назад"
+        tg.BackButton.show();
+
+        // Обрабатываем нажатие на кнопку "Назад"
+        tg.BackButton.onClick(() => {
+            window.history.back();
+        });
+    </script>
+<body>
+    {% if connected %}
+        <div style="display: flex; align-items: center;">
+            <img src="/static/images/green-checkmark.png" alt="Checkmark" style="width: 40px; height: 40px; margin-right: 10px;">
+            <p style="color: white; font-weight: bold; font-size: 40px; margin: 0;">{{ wallet_address }}</p>
+        </div>
+    {% else %}
+        <script>
+            window.onload = function () {
+                const tg = window.Telegram.WebApp;
+
+                fetch('/redirect/wallet', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token|escapejs }}'  // Используем фильтр escapejs для корректного экранирования
+                        },
+                        body: JSON.stringify({ 'user_id': '{{ user_id|escapejs }}' })  // Экранируем user_id
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            tg.close();
+                        } else {
+                            console.error('Error');
+                        }
+                    })
+                    .catch(error => console.error('Fetch error:', error));
+            };
+
+    </script>
+    {% endif %}
 </body>
 </html>

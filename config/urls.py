@@ -31,5 +31,6 @@ urlpatterns = [
     path('buy/character/', views.buy_character_view, name='buy_character'),
     path('buy/booster/', views.buy_boosters_view, name='buy_booster'),
     path('collect_points/', views.collect_points_view, name='collect_points'),
+    path('redirect/wallet', views.redirect_to_bot_wallet, name='collect_points'),
 ]
 
