@@ -200,7 +200,7 @@ def collect_points_view(request):
         character = get_object_or_404(Character, id=character_id)
 
         # Собираем очки
-        points = character.points_per_hour * 8
+        points = user.points_per_hour * 8
 
         # Добавляем очки пользователю
         user.points += points
@@ -235,6 +235,17 @@ def wallet_view(request: HttpRequest) -> HttpResponse:
     }
 
     return render(request, 'wallet.html', context)
+
+def disconnect_wallet_view(request) -> JsonResponse:
+    if request.method == "POST":
+        data = json.loads(request.body)
+        chat_id = data.get('user_id')
+
+        with open(f"wallet_storage/storage_{chat_id}.json", "w") as file:
+            json.dump({}, file, ensure_ascii=False, indent=4)
+
+        return JsonResponse({'success': True, 'chat_id': chat_id})
+    return JsonResponse({'success': False}, status=400)
 
 def redirect_to_bot_wallet(request) -> JsonResponse:
     if request.method == "POST":

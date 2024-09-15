@@ -8,6 +8,7 @@
         body {
             background-color: black;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
@@ -15,14 +16,47 @@
             margin: 0;
         }
         .button {
-            background-color: white;
-            color: black;
+            background-color: #008CFF; /* Голубой цвет */
+            color: white;
             padding: 10px 20px;
             border-radius: 50px;
             text-align: center;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 25px;
+            margin-top: 120px; /* Увеличено расстояние до кнопки */
         }
         .checkmark {
             font-size: 50px;
+        }
+        .wallet-address {
+            display: flex;
+            align-items: center;
+            font-size: 40px;
+            font-weight: bold;
+            margin-top: 20px; /* Увеличено расстояние сверху */
+        }
+        .wallet-address img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+        .center-image {
+            margin-bottom: 60px; /* Увеличено расстояние до текста/адреса кошелька */
+            width: 250px; /* Уменьшена ширина */
+            height: 250px; /* Уменьшена высота */
+            margin-top: -100px; /* Смещение изображения вверх */
+        }
+        .bordered-text {
+            color: white;
+            background-color: #008CFF; /* Голубой фон */
+            border-radius: 15px; /* Скругленные углы */
+            padding: 10px 20px;
+            font-weight: bold;
+            font-size: 20px; /* Уменьшен размер текста */
+            text-align: center;
+            margin-bottom: 30px; /* Увеличено расстояние до кнопки */
+            border: none; /* Убрана рамка */
         }
     </style>
 </head>
@@ -41,35 +75,72 @@
     </script>
 <body>
     {% if connected %}
-        <div style="display: flex; align-items: center;">
-            <img src="/static/images/green-checkmark.png" alt="Checkmark" style="width: 40px; height: 40px; margin-right: 10px;">
-            <p style="color: white; font-weight: bold; font-size: 40px; margin: 0;">{{ wallet_address }}</p>
+        <!-- Верхнее изображение по центру -->
+        <img src="/static/images/toncoin-ton-logo.png" alt="Connected Image" class="center-image">
+
+        <!-- Кошелек и адрес по центру -->
+        <div class="wallet-address">
+            <img src="/static/images/green-checkmark.png" alt="Checkmark">
+            <p>{{ wallet_address }}</p>
         </div>
-    {% else %}
+
+        <!-- Кнопка "Отключить кошелёк" -->
+        <div class="button" onclick="disconnectWallet()">Отключить кошелёк</div>
+
         <script>
-            window.onload = function () {
-                const tg = window.Telegram.WebApp;
+            function disconnectWallet() {
+                fetch('/disconnect/wallet', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token|escapejs }}'  // Используем фильтр escapejs для корректного экранирования
+                    },
+                    body: JSON.stringify({ 'user_id': '{{ user_id|escapejs }}' })  // Экранируем user_id
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = "/home2?user_id={{ user_id }}";
+                    } else {
+                        console.error('Error');
+                    }
+                })
+                .catch(error => console.error('Fetch error:', error));
+            }
+        </script>
 
+    {% else %}
+        <!-- Верхнее изображение по центру -->
+        <img src="/static/images/toncoin-ton-logo.png" alt="Disconnected Image" class="center-image">
+
+        <!-- Текст в голубой рамке -->
+        <div class="bordered-text">Кошелёк не подключен<br><br>Наш бот безопасно подключит тебя к экосистеме TON</div>
+
+        <!-- Кнопка "Подключить кошелёк" -->
+        <div class="button" onclick="connectWallet()">Подключить кошелёк</div>
+
+        <script>
+            function connectWallet() {
                 fetch('/redirect/wallet', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': '{{ csrf_token|escapejs }}'  // Используем фильтр escapejs для корректного экранирования
-                        },
-                        body: JSON.stringify({ 'user_id': '{{ user_id|escapejs }}' })  // Экранируем user_id
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            tg.close();
-                        } else {
-                            console.error('Error');
-                        }
-                    })
-                    .catch(error => console.error('Fetch error:', error));
-            };
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token|escapejs }}'  // Используем фильтр escapejs для корректного экранирования
+                    },
+                    body: JSON.stringify({ 'user_id': '{{ user_id|escapejs }}' })  // Экранируем user_id
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        tg.close();
+                    } else {
+                        console.error('Error');
+                    }
+                })
+                .catch(error => console.error('Fetch error:', error));
+            }
+        </script>
 
-    </script>
     {% endif %}
 </body>
 </html>

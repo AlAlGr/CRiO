@@ -1,8 +1,10 @@
 
-spython:S3776 "TRefactor this function to reduce its Cognitive Complexity from 16 to the 15 allowed.(¿²Á¨8¯„õ†2
-Rpython:S1481>".Replace unused local variable "user" with "_".(È‚ Ûıÿÿÿÿ8°„õ†2
-Upython:S1481>"1Replace unused local variable "created" with "_".(È‚ Ûıÿÿÿÿ8°„õ†2
-[python:S5754P"<Specify an exception class to catch or reraise the exception(ˆÊÉ·8°„õ†2
-Upython:S1481Y"1Replace unused local variable "created" with "_".(È‚ Ûıÿÿÿÿ8±„õ†2
-Ipython:S1481X"+Remove the unused local variable "wallets".(¶ˆ‰%8ßïÄŠ2
-Rpython:S1481Y".Replace unused local variable "user" with "_".(È‚ Ûıÿÿÿÿ8±„õ†2
+spython:S3776)"TRefactor this function to reduce its Cognitive Complexity from 16 to the 15 allowed.(¿²Á¨8åØÍ2
+Upython:S1481G"1Replace unused local variable "created" with "_".(È‚ Ûıÿÿÿÿ8æØÍ2
+Rpython:S1481G".Replace unused local variable "user" with "_".(È‚ Ûıÿÿÿÿ8æØÍ2
+[python:S5754Y"<Specify an exception class to catch or reraise the exception(ˆÊÉ·8æØÍ2
+Rpython:S1481`".Replace unused local variable "user" with "_".(È‚ Ûıÿÿÿÿ8æØÍ2
+Upython:S1481`"1Replace unused local variable "created" with "_".(È‚ Ûıÿÿÿÿ8æØÍ2
+Bpython:S125|"Remove this commented out code.(»Œ«Œüÿÿÿÿ8æØÍ2
+]python:S112™">Replace this generic exception class with a more specific one.(èÀ¶î8æØÍ2
+epython:S3457®"EAdd replacement fields or use a normal string instead of an f-string.(ÅŒí8æØÍ2

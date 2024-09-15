@@ -234,7 +234,7 @@
             updateCounter();
 
             collectPointsButton.addEventListener('click', function() {
-                fetch('{% url "collect_points" %}', {
+                fetch('/collect_points/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

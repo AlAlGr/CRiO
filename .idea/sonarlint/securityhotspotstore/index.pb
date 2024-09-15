@@ -210,3 +210,9 @@ n
 -telegram_miniapp/static/images/boosters_4.jpg,b/3/b33a99d539f496f56b2e0d3f97360c0737dd179b
 \
 ,telegram_miniapp/templates/buy_boosters.html,1/f/1f61454c76ede00168491275193968ec618525c7
+ƒ
+Stelegram_miniapp/migrations/0016_remove_wallet_user_wallet_is_connected_and_more.py,7/4/7469e48568cb039201f4325b7225262a0870beae
+L
+telegram_miniapp/messages.py,a/3/a3f86fd92981f69a1cb764c86e04f9a9820495e5
+=
+manifest.json,c/a/ca642a22686971b261b60de81d8ff554fdd91e2e
