@@ -1,3 +1,4 @@
 
-Ppython:S1481"1Replace unused local variable "created" with "_".(‚†ΰ8―Ή2
->python:S125©"Remove this commented out code.(όφΈ8²Ή2
+Ppython:S1481"1Replace unused local variable "created" with "_".(‚†ΰ8Βοφό2
+Rpython:S1481Θ"-Remove the unused local variable "character".(μΣυΚωÿÿÿÿ8Βοφό2
+>python:S125µ"Remove this commented out code.(όφΈ8Γοφό2

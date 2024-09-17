@@ -14,7 +14,7 @@ from pytoniq_core import Address
 from .connector import get_connector
 from telegram_miniapp.tc_storage import TcStorage
 from .models import User, Task, Wallet, Character, Improvement, Booster
-from bot import BOT_URL, command_wallet
+from bot import BOT_URL, command_wallet, connect_wallet
 
 
 def get_or_create_user(data: dict) -> User:
@@ -240,6 +240,9 @@ def disconnect_wallet_view(request) -> JsonResponse:
     if request.method == "POST":
         data = json.loads(request.body)
         chat_id = data.get('user_id')
+        connector = get_connector(chat_id)
+        asyncio.run(connector.restore_connection())
+        asyncio.run(connector.disconnect())
 
         with open(f"wallet_storage/storage_{chat_id}.json", "w") as file:
             json.dump({}, file, ensure_ascii=False, indent=4)
@@ -247,12 +250,17 @@ def disconnect_wallet_view(request) -> JsonResponse:
         return JsonResponse({'success': True, 'chat_id': chat_id})
     return JsonResponse({'success': False}, status=400)
 
+
+async def run_wallet_tasks(chat_id):
+    await command_wallet(chat_id)
+
+
 def redirect_to_bot_wallet(request) -> JsonResponse:
     if request.method == "POST":
         data = json.loads(request.body)
         chat_id = data.get('user_id')
 
-        async_to_sync(command_wallet)(chat_id)
+        async_to_sync(run_wallet_tasks)(chat_id)
 
         return JsonResponse({'success': True, 'chat_id': chat_id})
     return JsonResponse({'success': False}, status=400)
