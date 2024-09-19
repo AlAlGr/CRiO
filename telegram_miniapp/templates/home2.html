@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
     <title>Home</title>
     <style>
         body {
@@ -195,7 +196,9 @@
             <div>Boost</div>
         </a>
         <div>Earn</div>
-        <div>Frens</div>
+        <a href="/frens?user_id={{ user.user_id }}">
+            <div>Frens</div>
+        </a>
         <a href="/wallet?user_id={{ user.user_id }}">
             <div>Wallet</div>
         </a>

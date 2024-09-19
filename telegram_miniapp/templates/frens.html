@@ -1,21 +1,169 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Frens</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Семья</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start; /* Выравнивание контента по верхнему краю */
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .header {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 72px; /* Увеличено в 3 раза */
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+            max-width: 400px;
+            margin-top: 20px; /* Уменьшили расстояние до header */
+            justify-content: space-between;
+        }
+
+        .box {
+            flex: 1;
+            margin: 0 10px;
+            padding: 20px;
+            border: 2px solid #fff;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Специально для контейнера с текстом Earn и изображением */
+        .earn-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .earn-container img {
+            width: 30px;
+            height: 30px;
+            margin-left: 10px; /* Отступ для изображения справа от текста */
+        }
+
+        .users-list {
+            width: 100%;
+            max-width: 600px;
+            margin-top: 20px; /* Уменьшили расстояние до контейнера */
+            list-style-type: none;
+            padding: 0;
+            flex-grow: 0; /* Контейнер не будет растягиваться */
+        }
+
+        .users-list li {
+            padding: 15px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #fff;
+            font-size: 1.3em; /* Увеличиваем размер текста */
+        }
+
+        .users-list img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px; /* Уменьшаем отступ для текста */
+        }
+
+        /* Кнопка пригласить друга фиксирована внизу */
+        .invite-btn {
+            width: 90%;
+            max-width: 600px;
+            padding: 15px;
+            background-color: #fff;
+            color: #000;
+            text-align: center;
+            border: none;
+            border-radius: 10px;
+            font-size: 25px;
+            cursor: pointer;
+            position: fixed; /* Фиксированная кнопка внизу */
+            bottom: 70px; /* Отступ от нижнего края экрана */
+        }
+
+        .invite-btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        .highlight {
+            color: yellow; /* Жёлтый цвет для CRiO */
+        }
+
+    </style>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+        function sendInvite() {
+            window.location.href = 'https://t.me/share/url?url={{ share_link }}&text=Mine CRiO TOKEN and earn a TON !';
+        }
+    </script>
 </head>
 <body>
-    <h1>Мои рефералы</h1>
-    <ul>
-        {% for referral in referrals %}
-            <li>{{ referral.first_name }} {{ referral.last_name }} - <img src="{{ referral.avatar_url }}" alt="Avatar" width="50" height="50"></li>
+
+    <!-- Header with emoji -->
+    <div class="header">
+        <span>👨‍👩‍👧‍👦</span>
+    </div>
+
+    <!-- Two boxes with values -->
+    <div class="container">
+        <div class="box">
+            <div>Frens</div>
+            <div>{{ count_ref_users }}</div>
+        </div>
+        <div class="box">
+            <div class="earn-container">
+                <span>Earn</span>
+                <img src="/static/images/toncoin-ton-logo.png" alt="Coin Image"> <!-- Добавляем изображение справа -->
+            </div>
+            <div>{{ total_earn }} TON</div>
+        </div>
+    </div>
+
+    <!-- Users list -->
+    <ul class="users-list">
+        {% for user in ref_users %}
+            <li>
+                <img src="/static/images/cryptoner_{{ user.character_id }}.jpg" alt="Avatar">
+                <span>{{ user.first_name }}</span> <span>{{ user.points }} <span class="highlight">CRiO</span></span>
+            </li>
         {% endfor %}
     </ul>
-    <form method="POST">
-        {% csrf_token %}
-        <button type="submit">Получить 10% от очков друзей</button>
-    </form>
-    <a href="{% url 'home' %}">Назад</a>
+
+    <!-- Invite button -->
+    <button class="invite-btn" onclick="sendInvite()">Пригласить друга</button>
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+        // Инициализация Telegram Web App
+        const tg = window.Telegram.WebApp;
+
+        // Показываем кнопку "Назад"
+        tg.BackButton.show();
+
+        // Обрабатываем нажатие на кнопку "Назад"
+        tg.BackButton.onClick(() => {
+            window.history.back();
+        });
+    </script>
+
 </body>
 </html>

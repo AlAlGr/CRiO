@@ -131,16 +131,18 @@ def auth_view(request: HttpRequest) -> HttpResponse:
 
 
 def frens_view(request):
-    user = request.user
-    referrals = User.objects.filter(referred_by=user)
+    if request.method == 'GET':
+        user_id = request.GET.get('user_id')
+        ref_users = User.objects.filter(ref_id=user_id)
 
-    if request.method == 'POST':
-        points_to_add = referrals.aggregate(Sum('daily_points'))['daily_points__sum'] * 0.10
-        user.points += points_to_add
-        user.save()
-        return redirect('frens')
+    context = {
+        'ref_users': ref_users,
+        'count_ref_users': len(ref_users),
+        'total_earn': len(ref_users) * 0.001,
+        'share_link': f'{BOT_URL}?start={user_id}'
+    }
 
-    return render(request, 'telegram_miniapp/frens.html', {'referrals': referrals})
+    return render(request, 'frens.html', context)
 
 
 def buy_character_view(request):

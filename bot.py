@@ -1,19 +1,17 @@
-import logging
 import asyncio
+import logging
 import os
 import time
 
 import django
 import pytonconnect
-from aiogram import Bot, Dispatcher, types, Router, F
-from aiogram.utils.keyboard import InlineKeyboardBuilder
-from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-from aiogram.filters import CommandStart, CommandObject
+from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters import Command
-from aiogram.utils.web_app import safe_parse_webapp_init_data
-from aiohttp.web_request import Request
-from aiohttp.web_response import json_response
+from aiogram.filters import CommandStart, CommandObject
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 from asgiref.sync import sync_to_async
+from django.db import transaction
 from django.utils import timezone
 from pytonconnect import TonConnect
 from pytoniq_core import Address
@@ -62,6 +60,14 @@ async def check_and_notify_users():
 
         await asyncio.sleep(60)  # Проверять каждые 60 секунд
 
+@sync_to_async
+def update_user_points(user_id: int, points_to_add: int):
+    with transaction.atomic():  # Используем транзакцию для гарантии сохранности данных
+        user = User.objects.get(user_id=user_id)
+        user.points += points_to_add
+        user.save()
+
+
 @dp.message(CommandStart(deep_link=True))
 async def start_deep_link(message: types.Message, command: CommandObject):
     ref_id = command.args
@@ -77,6 +83,13 @@ async def start_deep_link(message: types.Message, command: CommandObject):
             'ref_id': ref_id
         }
     )
+    if ref_id is not None:
+        is_premium = message.from_user.is_premium
+
+        if is_premium:
+            await update_user_points(user_id=int(ref_id), points_to_add=15000)
+        else:
+            await update_user_points(user_id=int(ref_id), points_to_add=10000)
 
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text='Открыть Mini App', url=MINI_APP_URL)],
