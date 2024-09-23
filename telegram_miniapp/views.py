@@ -13,7 +13,7 @@ from pytoniq_core import Address
 
 from .connector import get_connector
 from telegram_miniapp.tc_storage import TcStorage
-from .models import User, Task, Wallet, Character, Improvement, Booster
+from .models import User, Task, Wallet, Character, Improvement, Booster, Club
 from bot import BOT_URL, command_wallet, connect_wallet
 
 
@@ -87,6 +87,10 @@ def home2_view(request: HttpRequest) -> HttpResponse:
         user_id = int(request.GET.get('user_id'))
         user = User.objects.get(user_id=user_id)
         character = Character.objects.get(id=user.character_id)
+        if user.club_id:
+            club = Club.objects.get(id=user.club_id)
+        else:
+            club = None
 
         now = timezone.now()
         time_elapsed = (now - user.last_collected).total_seconds()
@@ -111,6 +115,7 @@ def home2_view(request: HttpRequest) -> HttpResponse:
         context = {
             'user': user,
             'character': character,
+            'club': club if club else None,
             'progress': progress,
             'max_points': max_points,
             'current_points': current_points - 0.1,

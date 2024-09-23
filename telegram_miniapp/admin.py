@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Task, Character, Wallet, Booster
+from .models import User, Task, Character, Wallet, Booster, Club
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
@@ -40,3 +40,10 @@ class WalletAdmin(admin.ModelAdmin):
     Класс для управления моделью кошелька в админке.
     """
     list_display = ('user_id', 'wallet_address')
+
+@admin.register(Club)
+class ClubAdmin(admin.ModelAdmin):
+    list_display = ('name', 'creator_id', 'count_members')  # Какие поля отображать в списке
+    search_fields = ('name',)  # Поля для поиска
+    list_filter = ('creator_id',)  # Добавление фильтров по полям
+    ordering = ('name',)  # Сортировка по имени клуба

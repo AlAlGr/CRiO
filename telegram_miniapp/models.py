@@ -20,6 +20,7 @@ class User(models.Model):
     ref_id = models.BigIntegerField(blank=True, null=True)
     character_id = models.BigIntegerField(default=1)
     booster_id = models.BigIntegerField(default=0)
+    club_id = models.BigIntegerField(null=True)
 
     points = models.PositiveIntegerField(default=0)
     points_per_hour = models.PositiveIntegerField(default=100)
@@ -64,6 +65,12 @@ class User(models.Model):
             self.save()
             return True
         return False
+
+class Club(models.Model):
+    id = models.IntegerField(primary_key=True)
+    name = models.CharField(max_length=1024)
+    creator_id = models.BigIntegerField(null=True)
+    count_members = models.BigIntegerField(default=1)
 
 class Character(models.Model):
     id = models.IntegerField(primary_key=True)

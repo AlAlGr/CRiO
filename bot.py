@@ -1,4 +1,5 @@
 import asyncio
+import imghdr
 import logging
 import os
 import time
@@ -8,13 +9,20 @@ import pytonconnect
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters import Command
 from aiogram.filters import CommandStart, CommandObject
-from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.fsm.context import FSMContext
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, FSInputFile
 from aiogram.utils.keyboard import InlineKeyboardBuilder
+from aiogram.utils.deep_linking import create_start_link
+from aiogram.fsm.state import StatesGroup, State
+from aiogram.filters.state import StateFilter
+from aiogram.types.menu_button_commands import MenuButtonCommands, MenuButtonType, MenuButton
 from asgiref.sync import sync_to_async
 from django.db import transaction
 from django.utils import timezone
 from pytonconnect import TonConnect
 from pytoniq_core import Address
+from PIL import Image
+
 
 from telegram_miniapp.connector import get_connector
 from telegram_miniapp.messages import get_comment_message
@@ -22,7 +30,7 @@ from telegram_miniapp.messages import get_comment_message
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 django.setup()
 
-from telegram_miniapp.models import User
+from telegram_miniapp.models import User, Club
 
 API_TOKEN = '7526172076:AAGh7ubgHqMAKw3sEcVQI6eLtxq1tNWupqQ'
 MINI_APP_URL = 'https://t.me/Gehdhhenebjsjdn_bot/Cryptoner_Test'  # Замените на URL вашего Mini App
@@ -70,39 +78,56 @@ def update_user_points(user_id: int, points_to_add: int):
 
 @dp.message(CommandStart(deep_link=True))
 async def start_deep_link(message: types.Message, command: CommandObject):
-    ref_id = command.args
-    if str(ref_id) == str(message.chat.id):
-        ref_id = None
+    if command.args and command.args.startswith("club_"):
+        club_id = int(command.args.split("_")[1])
 
-    user, created = await sync_to_async(User.objects.get_or_create)(
-        user_id=message.chat.id,
-        defaults={
-            'first_name': message.from_user.first_name,
-            'last_name': message.from_user.last_name,
-            'username': message.from_user.username,
-            'ref_id': ref_id
-        }
-    )
-    if ref_id is not None:
-        is_premium = message.from_user.is_premium
+        user = await sync_to_async(User.objects.get)(user_id=message.from_user.id)
+        club = await sync_to_async(Club.objects.get)(id=club_id)
 
-        if is_premium:
-            await update_user_points(user_id=int(ref_id), points_to_add=15000)
-        else:
-            await update_user_points(user_id=int(ref_id), points_to_add=10000)
+        # Присваиваем пользователю club_id
+        user.club_id = club.id
+        user.points_per_hour = user.points_per_hour + int(user.points_per_hour * 0.025)
+        await sync_to_async(user.save)()
 
-    keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text='Открыть Mini App', url=MINI_APP_URL)],
-        [InlineKeyboardButton(text='Пригласить друга', callback_data='invite')]
-    ])
+        # Увеличиваем количество участников клуба
+        club.count_members += 1
+        await sync_to_async(club.save)()
 
-    if ref_id is not None:
-        try:
-            await bot.send_message(int(ref_id), f"Отлично. По твоей ссылке зарегистрировался (-лась) {message.from_user.full_name}")
-        except:
-            pass
+        await message.answer(f"Вы присоединились к клубу {club.name}!")
+    else:
+        ref_id = command.args
+        if str(ref_id) == str(message.chat.id):
+            ref_id = None
 
-    await message.answer("Привет! Нажмите кнопку ниже, и начнется автоматический фарминг CRiO TOKEN. Бот вам отправит сообщение через 8 часов , чтоб вы забрали свои токены .", reply_markup=keyboard)
+        user, created = await sync_to_async(User.objects.get_or_create)(
+            user_id=message.chat.id,
+            defaults={
+                'first_name': message.from_user.first_name,
+                'last_name': message.from_user.last_name,
+                'username': message.from_user.username,
+                'ref_id': ref_id
+            }
+        )
+        if ref_id is not None:
+            is_premium = message.from_user.is_premium
+
+            if is_premium:
+                await update_user_points(user_id=int(ref_id), points_to_add=15000)
+            else:
+                await update_user_points(user_id=int(ref_id), points_to_add=10000)
+
+        keyboard = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text='Открыть Mini App', url=MINI_APP_URL)],
+            [InlineKeyboardButton(text='Пригласить друга', callback_data='invite')]
+        ])
+
+        if ref_id is not None:
+            try:
+                await bot.send_message(int(ref_id), f"Отлично. По твоей ссылке зарегистрировался (-лась) {message.from_user.full_name}")
+            except:
+                pass
+
+        await message.answer("Привет! Нажмите кнопку ниже, и начнется автоматический фарминг CRiO TOKEN. Бот вам отправит сообщение через 8 часов , чтоб вы забрали свои токены .", reply_markup=keyboard)
 
 @dp.message(CommandStart())
 async def start(message: types.Message):
@@ -122,6 +147,109 @@ async def start(message: types.Message):
     ])
 
     await message.answer("Привет! Нажмите кнопку ниже, и начнется автоматический фарминг CRiO TOKEN. Бот вам отправит сообщение через 8 часов , чтоб вы забрали свои токены .", reply_markup=keyboard)
+
+
+class CreateSquadState(StatesGroup):
+    awaiting_club_name = State()
+    awaiting_club_photo = State()
+
+# Команда для создания клуба
+@dp.message(Command(commands="create_squad"))
+async def create_squad_command(message: types.Message, state: FSMContext):
+    user_id = message.from_user.id
+
+    # Проверяем, создавал ли пользователь уже клуб по полю creator_id
+    club = await sync_to_async(Club.objects.filter)(creator_id=user_id)
+    club = await sync_to_async(club.first)()
+
+    if club:
+        deep_link = await create_start_link(bot=message.bot, payload=f"club_{club.id}")
+        await message.answer(
+            f"Ваш сквад:\n"
+            f"Название: {club.name}\n"
+            f"Количество участников: {club.count_members}\n"
+            f"Ссылка для пришлашения: {deep_link}"
+        )
+    else:
+        # Если клуб не создан, начинаем создание
+        await message.answer("Введите название вашего сквада:")
+        await state.set_state(CreateSquadState.awaiting_club_name)
+
+# Шаг 1: Получаем название клуба
+@dp.message(StateFilter(CreateSquadState.awaiting_club_name))
+async def get_club_name(message: types.Message, state: FSMContext):
+    await state.update_data(club_name=message.text)
+    await message.answer("Отправьте фото для сквада (размер не более 1024x1024, тип JPG):")
+    await state.set_state(CreateSquadState.awaiting_club_photo)
+
+# Шаг 2: Получаем и проверяем фото
+@dp.message(F.photo, StateFilter(CreateSquadState.awaiting_club_photo))
+async def get_club_photo(message: types.Message, state: FSMContext):
+    photo = message.photo[-1]  # Получаем самую большую версию изображения
+
+    # Получаем объект файла
+    file_info = await message.bot.get_file(photo.file_id)
+
+    # Путь для сохранения файла
+    photo_path = f"telegram_miniapp/static/images/club_photo_{message.from_user.id}.jpg"
+
+    # Скачиваем файл
+    await message.bot.download_file(file_info.file_path, destination=photo_path)
+
+    if imghdr.what(photo_path) != 'jpeg':
+        await message.answer("Пожалуйста, отправьте изображение в формате JPG.")
+        os.remove(photo_path)  # Удаляем некорректный файл
+        return
+
+    img = Image.open(photo_path)
+    if img.width > 1024 or img.height > 1024:
+        await message.answer("Размер изображения слишком большой. Пожалуйста, отправьте фото размером до 1024x1024.")
+        os.remove(photo_path)  # Удаляем некорректный файл
+        return
+
+    # Сохраняем фото в постоянное место
+    final_photo_path = f"telegram_miniapp/static/images/club_photo_{message.from_user.id}.jpg"
+    os.rename(photo_path, final_photo_path)
+
+    # Обновляем состояние
+    await state.update_data(photo_path=final_photo_path)
+
+    # Переходим к созданию клуба
+    await create_club(message, state)
+
+# Окончание создания клуба и отправка реферальной ссылки
+async def create_club(message: types.Message, state: FSMContext):
+    user_id = message.from_user.id
+    data = await state.get_data()
+
+    club_name = data['club_name']
+    photo_path = data['photo_path']
+
+
+    # Создаем запись в БД
+    club = await sync_to_async(Club.objects.create)(
+        name=club_name,
+        creator_id=user_id,
+        count_members=1
+    )
+
+    club = await sync_to_async(Club.objects.filter)(creator_id=user_id)
+    club = await sync_to_async(club.first)()
+
+    user = await sync_to_async(User.objects.get)(user_id=user_id)
+    user.points_per_hour = user.points_per_hour + int(user.points_per_hour * 0.025)
+    user.club_id = club.id
+    await sync_to_async(user.save)()
+
+    # Создаем реферальную ссылку для клуба
+    deep_link = await create_start_link(bot=message.bot, payload=f"club_{club.id}")
+
+    # Отправляем пользователю сообщение с реферальной ссылкой
+    await message.answer(f"Сквад '{club_name}' создан! Вот ваша ссылка для приглашения в сквад: {deep_link}")
+
+    # Завершаем состояние FSM
+    await state.clear()
+
 
 @dp.callback_query(F.data == 'invite')
 async def invite_friends(callback_query: types.CallbackQuery):
@@ -239,6 +367,13 @@ async def on_startup(dispatcher: Dispatcher):
     asyncio.create_task(check_and_notify_users())
 
 async def start_bot():
+    commands = [
+        types.BotCommand(command="start", description="Перезапустить бота"),
+        types.BotCommand(command="create_squad", description="Создать сквад"),
+    ]
+
+    await bot.set_my_commands(commands)
+
     logging.info("Starting bot...")
     dp.startup.register(on_startup)
     await dp.start_polling(bot)

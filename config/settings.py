@@ -137,7 +137,7 @@ STATIC_URL = '/static/'
 
 # Убедитесь, что здесь указан правильный путь к вашей папке 'static'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'telegram_miniapp/static'),
 ]
 
 # Укажите STATIC_ROOT, если вы собираетесь использовать collectstatic

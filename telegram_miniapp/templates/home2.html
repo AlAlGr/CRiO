@@ -138,6 +138,34 @@
         .highlight {
             color: yellow;
         }
+
+        .right .club-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%; /* Круглое изображение */
+            object-fit: cover; /* Сохранение пропорций изображения */
+            margin: 0 auto; /* Центрирование изображения */
+        }
+
+        /* Стили для текста в блоке .right */
+        .right .club-name {
+            font-size: 1.2em;
+            margin-top: 10px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+    .right .club-members {
+        font-size: 0.9em;
+        margin-top: 5px;
+        text-align: center;
+        color: #ffffff;
+    }
+    .vertical-line {
+        width: 1px; /* Ширина линии */
+        background-color: white; /* Цвет линии */
+        margin: 0 20px; /* Отступы слева и справа */
+    }
     </style>
 </head>
 <body>
@@ -163,7 +191,14 @@
             <div class="level">Level {{ character.id }}</div>
         </div>
         <div class="right">
-            <div class="squad">Тут СКВАД</div>
+            {% if club %}
+                <div class="club-name">
+                    <img src="/static/images/club_photo_{{ user.user_id }}.jpg" alt="Club Logo" class="club-image"> <!-- Добавляем изображение клуба -->
+                </div> <!-- Название клуба -->
+                <div class="club-members">{{ club.count_members }} members</div> <!-- Количество участников клуба -->
+            {% else %}
+                <div class="club-name">Ты не вошёл в сквад</div>
+            {% endif %}
         </div>
     </div>
 
