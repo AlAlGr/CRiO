@@ -25,7 +25,6 @@ urlpatterns = [
     path('frens/', views.frens_view, name='frens'),
     path('wallet/', views.wallet_view, name='wallet'),
     path('disconnect/wallet', views.disconnect_wallet_view, name='disconnect_wallet_view'),
-    path('tasks/', views.tasks_view, name='tasks'),
     path('buy-character/<int:character_id>/', views.buy_character_view, name='buy_character'),
     path('buy-improvement/<int:improvement_id>/', views.buy_improvement_view, name='buy_improvement'),
     path('save_user/', views.save_user, name='save_user'),
@@ -33,5 +32,7 @@ urlpatterns = [
     path('buy/booster/', views.buy_boosters_view, name='buy_booster'),
     path('collect_points/', views.collect_points_view, name='collect_points'),
     path('redirect/wallet', views.redirect_to_bot_wallet, name='redirect_to_bot_wallet'),
+    path('tasks/', views.task_list, name='task_list'),
+    path('complete_task/', views.complete_task, name='complete_task'),  # Уже корректно
 ]
 

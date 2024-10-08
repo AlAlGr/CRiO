@@ -123,20 +123,21 @@ class Booster(models.Model):
         return points
 
 class Task(models.Model):
-    """
-    Модель задания, которое может выполнять пользователь.
-    """
-    title: str = models.CharField(max_length=200)
-    description: str = models.TextField()
-    icon: str = models.ImageField(upload_to='icons/')  # Значок задания
-    image: str = models.ImageField(upload_to='images/')  # Дополнительное изображение задания
-    reward: int = models.PositiveIntegerField()  # Вознаграждение за выполнение задания
-    start_date: timezone = models.DateTimeField()
-    end_date: timezone = models.DateTimeField()
-    is_active: bool = models.BooleanField(default=True)
+    id = models.IntegerField(primary_key=True)
+    name = models.CharField(max_length=255, default="")  # Название задания
+    url = models.URLField(default="")  # URL задания
+    reward = models.PositiveIntegerField(default=1)  # Награда за выполнение задания
 
     def __str__(self):
-        return self.title
+        return self.name
+
+class UserTask(models.Model):
+    user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='user_tasks')  # Ссылка на пользователя
+    task = models.ForeignKey(Task, on_delete=models.CASCADE)  # Ссылка на задание
+    completed_at = models.DateTimeField(auto_now_add=True)  # Время выполнения задания
+
+    def __str__(self):
+        return f"{self.user} - {self.task.name}"
 
 class Wallet(models.Model):
     user_id = models.BigIntegerField(unique=True, null=True)
@@ -145,4 +146,5 @@ class Wallet(models.Model):
 
     def __str__(self):
         return f"WalletConnection(user_id={self.user_id}, is_connected={self.is_connected})"
+
 

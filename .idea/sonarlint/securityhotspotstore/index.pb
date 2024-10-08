@@ -506,3 +506,7 @@ c
 .staticfiles/admin/js/vendor/select2/i18n/eu.js,c/0/c089894332a313a8eecfd338a74ea035ff6ff3d5
 ^
 .staticfiles/admin/js/vendor/select2/i18n/mk.js,6/a/6a0cb84108bc251c3329bcd51f751de4f66abc64
+e
+5telegram_miniapp/migrations/0017_club_user_club_id.py,7/3/733a62cf6f48a0550ed9f75c41fc5d0fae866a22
+h
+8telegram_miniapp/static/images/club_photo_1638270549.jpg,4/e/4eaaa93e39b1b9f0749dff43862c7ba0c799f65f

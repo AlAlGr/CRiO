@@ -30,7 +30,8 @@ ALLOWED_HOSTS = [
     "68e0-38-180-206-248.ngrok-free.app",
     'b6a6-185-238-74-14.ngrok-free.app',
     'f87c-185-238-74-14.ngrok-free.app',
-    '58b9-185-238-74-14.ngrok-free.app'
+    '58b9-185-238-74-14.ngrok-free.app',
+    "a319-185-238-74-14.ngrok-free.app"
 
 ]
 
@@ -38,7 +39,8 @@ CSRF_TRUSTED_ORIGINS = [
     "https://68e0-38-180-206-248.ngrok-free.app",
     'https://b6a6-185-238-74-14.ngrok-free.app',  # Ваш домен
     'https://f87c-185-238-74-14.ngrok-free.app',
-    'https://58b9-185-238-74-14.ngrok-free.app'
+    'https://58b9-185-238-74-14.ngrok-free.app',
+    "https://a319-185-238-74-14.ngrok-free.app"
 ]
 
 
@@ -126,6 +128,7 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
 
 
 # Static files (CSS, JavaScript, Images)

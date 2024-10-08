@@ -4,35 +4,165 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Tasks</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: black; /* Чёрный фон страницы */
+            color: white; /* Белый цвет текста по умолчанию */
+            margin: 0; /* Убираем отступы по умолчанию */
+            padding: 0; /* Убираем отступы по умолчанию */
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5em; /* Увеличиваем размер шрифта */
+            margin: 20px 0; /* Добавляем отступы сверху и снизу */
+        }
+
+        ul {
+            list-style-type: none; /* Убираем маркеры списка */
+            padding: 0; /* Убираем внутренние отступы списка */
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Выравнивание карточек по центру */
+        }
+
+        .task-item {
+            background-color: #2c2c2c; /* Темно-серый фон для задания */
+            padding: 20px; /* Отступы внутри задания */
+            margin: 10px; /* Отступы между заданиями */
+            border-radius: 15px; /* Более сильное скругление углов */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); /* Небольшая тень */
+            width: 80%; /* Ширина карточки */
+            text-align: center; /* Центрируем текст внутри карточки */
+        }
+
+        .task-button {
+            background-color: gray;
+            color: white;
+            padding: 10px 20px; /* Увеличиваем размер кнопки */
+            border: none;
+            border-radius: 20px; /* Сильное скругление кнопки */
+            cursor: pointer;
+            font-size: 1em; /* Размер шрифта кнопки */
+            transition: background-color 0.3s; /* Плавный переход для цвета фона */
+            margin-top: 10px; /* Отступ сверху для кнопки */
+            width: 100%; /* Кнопка на всю ширину карточки */
+        }
+
+        .task-button.completed {
+            background-color: green;
+        }
+
+        .task-reward {
+            display: block; /* Отображаем награду на новой строке */
+            margin: 10px 0; /* Отступы сверху и снизу */
+            font-weight: bold; /* Полужирный шрифт */
+            font-size: 1.2em; /* Увеличиваем размер шрифта награды */
+        }
+
+        .task-divider {
+            height: 1px; /* Высота линии */
+            background-color: lightgray; /* Цвет линии */
+            margin: 10px 0; /* Отступы сверху и снизу */
+        }
+
+        .task-name {
+            font-size: 1.5em; /* Увеличиваем размер шрифта названия задания */
+            font-weight: bold; /* Полужирный шрифт для названия задания */
+            display: block; /* Отображаем название на новой строке */
+        }
+        .highlight {
+            color: yellow; /* Жёлтый цвет для CRiO */
+        }
+    </style>
 </head>
 <body>
-    <h1>Задания</h1>
 
-    <!-- Отображение всех заданий -->
-    <ul>
-        {% for task in tasks %}
-        <li>
-            <h2>{{ task.title }}</h2>
-            <p>{{ task.description }}</p>
-            <p>Вознаграждение: {{ task.reward }}</p>
-        </li>
-        {% endfor %}
-    </ul>
+<h1>Tasks</h1>
+{% load custom_filters %}
 
-    <!-- Форма добавления нового задания для администратора -->
-    {% if user.is_staff %}
-    <h2>Добавить новое задание</h2>
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <input type="text" name="title" placeholder="Название задания" required>
-        <textarea name="description" placeholder="Описание" required></textarea>
-        <input type="file" name="icon" required>
-        <input type="file" name="image">
-        <input type="number" name="reward" placeholder="Вознаграждение" required>
-        <input type="datetime-local" name="start_date" required>
-        <input type="datetime-local" name="end_date" required>
-        <button type="submit">Добавить задание</button>
-    </form>
-    {% endif %}
+
+<ul>
+    {% for task in tasks %}
+    <li class="task-item">
+        <span class="task-name">{{ task.name }}</span>
+        <span class="task-reward">{{ task.reward|format_points }} <span class="highlight">DGEM</span></span>
+        <button class="task-button {% if task.is_completed %}completed{% endif %}"
+                data-task-id="{{ task.id }}"
+                data-task-url="{{ task.url }}"
+                {% if task.is_completed %}disabled{% endif %}>
+            {% if task.is_completed %}Completed{% else %}Start{% endif %}
+        </button>
+        <div class="task-divider"></div>
+    </li>
+    {% endfor %}
+</ul>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const buttons = document.querySelectorAll('.task-button');
+
+        buttons.forEach(button => {
+            button.addEventListener('click', async function() {
+                const taskId = button.getAttribute('data-task-id');
+                const taskUrl = button.getAttribute('data-task-url'); // Получаем URL задания
+
+                try {
+                    const response = await fetch("{% url 'complete_task' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}', // Для защиты от CSRF атак (Django CSRF-токен)
+                        },
+                        body: JSON.stringify({
+                            user_id: {{ user.user_id }},  // Передаем user_id и task_id в теле запроса
+                            task_id: taskId,
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.status === 'completed') {
+                        if (taskUrl.includes("t.me")) {
+                            Telegram.WebApp.openTelegramLink(taskUrl); // Переход по URL задания через openTelegramLink
+                        } else {
+                            Telegram.WebApp.openLink(taskUrl); // Переход по URL задания через openLink
+                        }
+
+                        // Задержка перед сменой кнопки на зеленую
+                        setTimeout(() => {
+                            button.classList.add('completed');
+                            button.disabled = true;
+                            button.textContent = 'Completed';
+                        }, 6000); // 7 секунды
+                    } else if (data.status === 'already_completed') {
+                        alert(data.message);
+                    }
+
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+    });
+</script>
+
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>
+    // Инициализация Telegram Web App
+    const tg = window.Telegram.WebApp;
+
+    // Показываем кнопку "Назад"
+    tg.BackButton.show();
+
+    // Обрабатываем нажатие на кнопку "Назад"
+    tg.BackButton.onClick(() => {
+        window.history.back();
+    });
+</script>
+
 </body>
 </html>

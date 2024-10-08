@@ -13,7 +13,7 @@ from pytoniq_core import Address
 
 from .connector import get_connector
 from telegram_miniapp.tc_storage import TcStorage
-from .models import User, Task, Wallet, Character, Improvement, Booster, Club
+from .models import User, Task, Wallet, Character, Improvement, Booster, Club, UserTask
 from bot import BOT_URL, command_wallet, connect_wallet
 
 
@@ -280,33 +280,33 @@ def is_admin(user: User) -> bool:
     return user.is_staff  # Встроенное поле Django для проверки, является ли пользователь админом
 
 
-@user_passes_test(is_admin)
-def tasks_view(request: HttpRequest) -> HttpResponse:
-    """
-    Страница с заданиями. Администратор может добавлять новые задания.
-    """
-    user = get_object_or_404(User, user_id=request.GET.get('id'))
-    tasks = Task.objects.filter(start_date__lte=timezone.now(), end_date__gte=timezone.now(), is_active=True)
-
-    if request.method == 'POST' and user.is_staff:
-        # Логика добавления нового задания администратором
-        Task.objects.create(
-            title=request.POST.get('title'),
-            description=request.POST.get('description'),
-            icon=request.FILES.get('icon'),
-            image=request.FILES.get('image'),
-            reward=request.POST.get('reward'),
-            start_date=request.POST.get('start_date'),
-            end_date=request.POST.get('end_date'),
-            is_active=True
-        )
-        return redirect('tasks')
-
-    context = {
-        'user': user,
-        'tasks': tasks
-    }
-    return render(request, 'tasks.html', context)
+# @user_passes_test(is_admin)
+# def tasks_view(request: HttpRequest) -> HttpResponse:
+#     """
+#     Страница с заданиями. Администратор может добавлять новые задания.
+#     """
+#     user = get_object_or_404(User, user_id=request.GET.get('id'))
+#     tasks = Task.objects.filter(start_date__lte=timezone.now(), end_date__gte=timezone.now(), is_active=True)
+#
+#     if request.method == 'POST' and user.is_staff:
+#         # Логика добавления нового задания администратором
+#         Task.objects.create(
+#             title=request.POST.get('title'),
+#             description=request.POST.get('description'),
+#             icon=request.FILES.get('icon'),
+#             image=request.FILES.get('image'),
+#             reward=request.POST.get('reward'),
+#             start_date=request.POST.get('start_date'),
+#             end_date=request.POST.get('end_date'),
+#             is_active=True
+#         )
+#         return redirect('tasks')
+#
+#     context = {
+#         'user': user,
+#         'tasks': tasks
+#     }
+#     return render(request, 'tasks.html', context)
 
 
 # def buy_character_view(request, character_id):
@@ -335,3 +335,34 @@ def buy_improvement_view(request, improvement_id):
                           {'message': 'Недостаточно очков для покупки улучшения.'})
 
     return render(request, 'telegram_miniapp/buy_improvement.html', {'improvement': improvement})
+
+def complete_task(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        user_id = data.get('user_id')
+        task_id = data.get('task_id')
+
+        user = get_object_or_404(User, user_id=user_id)
+        task = get_object_or_404(Task, id=task_id)
+
+        if UserTask.objects.filter(user=user, task=task).exists():
+            return JsonResponse({'status': 'already_completed', 'message': 'Task already completed'})
+
+        user.points += task.reward
+        user.save()
+
+        UserTask.objects.create(user=user, task=task)
+        return JsonResponse({'status': 'completed', 'message': 'Task completed successfully', 'reward': task.reward})
+
+
+def task_list(request):
+    user_id = request.GET.get('user_id')
+    user = User.objects.get(user_id=user_id)
+
+    tasks = Task.objects.all()
+
+    completed_tasks = UserTask.objects.filter(user=user).values_list('task_id', flat=True)
+    for task in tasks:
+        task.is_completed = task.id in completed_tasks
+
+    return render(request, 'tasks.html', {'tasks': tasks, 'user': user})

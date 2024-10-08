@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Task, Character, Wallet, Booster, Club
+from .models import User, Task, Character, Wallet, Booster, Club, Task
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
@@ -9,15 +9,6 @@ class UserAdmin(admin.ModelAdmin):
     list_display = ('user_id', 'first_name', 'last_name', 'username', 'points', 'created_at')
     search_fields = ('user_id', 'first_name', 'last_name', 'username')
     list_filter = ('created_at',)
-
-@admin.register(Task)
-class TaskAdmin(admin.ModelAdmin):
-    """
-    Класс для управления моделью задания в админке.
-    """
-    list_display = ('title', 'reward', 'start_date', 'end_date', 'is_active')
-    search_fields = ('title', 'description')
-    list_filter = ('start_date', 'end_date', 'is_active')
 
 @admin.register(Character)
 class CharacterAdmin(admin.ModelAdmin):
@@ -47,3 +38,7 @@ class ClubAdmin(admin.ModelAdmin):
     search_fields = ('name',)  # Поля для поиска
     list_filter = ('creator_id',)  # Добавление фильтров по полям
     ordering = ('name',)  # Сортировка по имени клуба
+
+@admin.register(Task)
+class TaskAdmin(admin.ModelAdmin):
+    list_display = ('name', 'url', 'reward')  # Поля для отображения в админке
