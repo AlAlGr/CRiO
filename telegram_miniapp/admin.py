@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Task, Character, Wallet, Booster, Club, Task
+from .models import User, Task, Character, Wallet, Booster, Club, Task, UserTask
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
@@ -42,3 +42,7 @@ class ClubAdmin(admin.ModelAdmin):
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
     list_display = ('name', 'url', 'reward')  # Поля для отображения в админке
+
+@admin.register(UserTask)
+class TaskAdmin(admin.ModelAdmin):
+    list_display = ('user', 'task', 'completed_at')  # Поля для отображения в админке
