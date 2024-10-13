@@ -42,11 +42,13 @@
 
         .header .level {
             color: yellow;
+            font-size: 1em;
         }
 
         .header .character-name {
             font-size: 1em;
             margin-right: 10px;
+            margin-bottom: 5px;
         }
 
         .header .squad {
@@ -54,7 +56,7 @@
         }
 
         .username {
-            margin: 20px 0;
+            margin: 1px 0;
             font-size: 1.8em;
         }
 
@@ -64,8 +66,8 @@
         }
 
         .coin-image {
-            width: 220px;
-            height: 220px;
+            width: 290px;
+            height: 290px;
             margin: 20px auto; /* Центрирование монетки с небольшими отступами */
         }
 
@@ -140,8 +142,8 @@
         }
 
         .right .club-image {
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%; /* Круглое изображение */
             object-fit: cover; /* Сохранение пропорций изображения */
             margin: 0 auto; /* Центрирование изображения */
@@ -149,15 +151,15 @@
 
         /* Стили для текста в блоке .right */
         .right .club-name {
-            font-size: 1.2em;
-            margin-top: 10px;
+            font-size: 0.7em;
+            margin-top: 3px;
             font-weight: bold;
             text-align: center;
         }
 
     .right .club-members {
-        font-size: 0.9em;
-        margin-top: 5px;
+        font-size: 0.7em;
+        margin-top: 2px;
         text-align: center;
         color: #ffffff;
     }
@@ -165,6 +167,13 @@
         width: 1px; /* Ширина линии */
         background-color: white; /* Цвет линии */
         margin: 0 20px; /* Отступы слева и справа */
+    }
+    .img_points {
+        text-align: center;
+        padding: 2px 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
     </style>
 </head>
@@ -195,7 +204,7 @@
                 <div class="club-name">
                     <img src="/static/images/club_photo_{{ user.user_id }}.jpg" alt="Club Logo" class="club-image"> <!-- Добавляем изображение клуба -->
                 </div> <!-- Название клуба -->
-                <div class="club-members">{{ club.count_members }} members</div> <!-- Количество участников клуба -->
+                <div class="club-members">{{ club.name }} {{ club.count_members }} m</div> <!-- Количество участников клуба -->
             {% else %}
                 <div class="club-name">Ты не вошёл в сквад</div>
             {% endif %}
@@ -206,15 +215,17 @@
     <div class="username">{{ user.first_name }}</div>
 
     <!-- Очки пользователя -->
-    <div class="points">{{ user.points|format_points }}</div>
+     <div class="img_points">
+        <img src="/static/images/coin.png" alt="CRiO Coin" style="margin-right: 10px; width: 40px; height: 40px;">
+        <div class="points">{{ user.points|format_points }}</div>
+     </div>
 
-    <!-- Изображение монетки -->
-    <img src="/static/images/cryptoner_{{ character.id }}.jpg" alt="CRiO Coin" class="coin-image">
+    <img src="/static/images/cryptoner_{{ character.id }}.jpg" alt="" class="coin-image">
 
     <!-- Кнопка для сборки монет -->
     <div class="button-container">
         <button id="collect-points-button" disabled>
-            <div>Farming <span class="highlight">CRiO</span></div>
+            <div>Farming <span class="highlight">DGEM</span></div>
             <div>
                 <span id="current-points">{{ current_points }}</span> / {{ max_points }}
                 <span>| {{ time_left_hours }}</span>
@@ -225,7 +236,7 @@
     <!-- Footer с кнопками -->
     <div class="footer">
         <a href="/buy/character?user_id={{ user.user_id }}">
-            <div>Cryptoners</div>
+            <div>DGEM</div>
         </a>
         <a href="/buy/booster?user_id={{ user.user_id }}">
             <div>Boost</div>

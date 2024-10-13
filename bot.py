@@ -369,14 +369,13 @@ async def on_startup(dispatcher: Dispatcher):
 async def start_bot():
     commands = [
         types.BotCommand(command="start", description="Перезапустить бота"),
-        types.BotCommand(command="create_squad", description="Создать сквад"),
     ]
 
     await bot.set_my_commands(commands)
 
     logging.info("Starting bot...")
     dp.startup.register(on_startup)
-    await dp.start_polling(bot)
+    await dp.start_polling(bot, skip_updates=True)
 
 
 # if __name__ == '__main__':

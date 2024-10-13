@@ -510,3 +510,5 @@ e
 5telegram_miniapp/migrations/0017_club_user_club_id.py,7/3/733a62cf6f48a0550ed9f75c41fc5d0fae866a22
 h
 8telegram_miniapp/static/images/club_photo_1638270549.jpg,4/e/4eaaa93e39b1b9f0749dff43862c7ba0c799f65f
+‰
+Ytelegram_miniapp/migrations/0018_remove_task_description_remove_task_end_date_and_more.py,f/e/fe8dec9037f3ce79c27ea01064b76002111d8641

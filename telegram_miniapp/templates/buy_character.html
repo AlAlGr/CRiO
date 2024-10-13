@@ -115,7 +115,7 @@
     {% load custom_filters %}
     <!-- Верхний блок с изображением монетки и количеством очков -->
     <div class="header">
-        <img src="/static/images/free-icon-coin-1489742.png" alt="CRiO Coin">
+        <img src="/static/images/coin.png" alt="CRiO Coin">
         <p>{{ user.points|format_points }}</p>
     </div>
 
@@ -127,7 +127,7 @@
             <img src="/static/images/cryptoner_{{ character.id }}.jpg" alt="Character Icon"> <!-- Иконка персонажа -->
             <div class="character-info">
                 <p>Стоимость: {{ character.cost }}</p>
-                <p><span class="highlight">CRiO</span> в час: {{ character.points_per_hour }}</p>
+                <p><span class="highlight">DGEM</span> в час: {{ character.points_per_hour }}</p>
             </div>
             <div class="button-container">
                 {% if next_character_id == character.id %}
