@@ -60,7 +60,7 @@ async def check_and_notify_users():
                 if 8 * 60 * 60 <= time_elapsed <= (8 * 60 * 60) + 100 or (8 * 60 * 60) * 2 <= time_elapsed <= ((8 * 60 * 60) * 2) + 100:  # 8 часов в секундах
                     try:
                         # Отправляем сообщение пользователю
-                        await bot.send_message(user.user_id, "Забери CRiO Token зайди в Booster", reply_markup=keyboard)
+                        await bot.send_message(user.user_id, "Забери DGEM Token зайди в Booster", reply_markup=keyboard)
 
                     except Exception as e:
                         # Обработка других исключений
@@ -127,7 +127,7 @@ async def start_deep_link(message: types.Message, command: CommandObject):
             except:
                 pass
 
-        await message.answer("Привет! Нажмите кнопку ниже, и начнется автоматический фарминг CRiO TOKEN. Бот вам отправит сообщение через 8 часов , чтоб вы забрали свои токены .", reply_markup=keyboard)
+        await message.answer("Привет! Нажмите кнопку ниже, и начнется автоматический фарминг DGEM TOKEN. Бот вам отправит сообщение через 8 часов , чтоб вы забрали свои токены .", reply_markup=keyboard)
 
 @dp.message(CommandStart())
 async def start(message: types.Message):
@@ -146,7 +146,7 @@ async def start(message: types.Message):
         [InlineKeyboardButton(text='Пригласить друга', callback_data='invite')]
     ])
 
-    await message.answer("Привет! Нажмите кнопку ниже, и начнется автоматический фарминг CRiO TOKEN. Бот вам отправит сообщение через 8 часов , чтоб вы забрали свои токены .", reply_markup=keyboard)
+    await message.answer("Привет! Нажмите кнопку ниже, и начнется автоматический фарминг DGEM TOKEN. Бот вам отправит сообщение через 8 часов , чтоб вы забрали свои токены .", reply_markup=keyboard)
 
 
 class CreateSquadState(StatesGroup):
@@ -367,11 +367,11 @@ async def on_startup(dispatcher: Dispatcher):
     asyncio.create_task(check_and_notify_users())
 
 async def start_bot():
-    commands = [
-        types.BotCommand(command="start", description="Перезапустить бота"),
-    ]
-
-    await bot.set_my_commands(commands)
+    # commands = [
+    #     types.BotCommand(command="start", description="Перезапустить бота"),
+    # ]
+    #
+    # await bot.set_my_commands(commands)
 
     logging.info("Starting bot...")
     dp.startup.register(on_startup)
