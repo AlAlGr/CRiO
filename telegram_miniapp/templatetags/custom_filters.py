@@ -9,3 +9,7 @@ def format_points(value):
         return formatted_value
     except (ValueError, TypeError):
         return value
+
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key)

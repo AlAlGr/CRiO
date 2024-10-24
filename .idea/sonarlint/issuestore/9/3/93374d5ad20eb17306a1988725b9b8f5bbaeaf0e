@@ -8,4 +8,5 @@ Spython:S1481†".Replace unused local variable "user" with "_".(Θ‚ Ϋύÿÿÿÿ8Ο«
 hpython:S1854ζ"IRemove this assignment to local variable 'club'; the value is never used.(ζηu8Τ«Ϋύ΅2
 Spython:S1481β".Remove the unused local variable "photo_path".(Ζ›””ψÿÿÿÿ8Υ«Ϋύ΅2
 ]python:S112 ">Replace this generic exception class with a more specific one.(θΐ¶ξ8Φ«Ϋύ΅2
-Cpython:S125ώ"Remove this commented out code.(ΏΨσϋÿÿÿÿ8Ψ«Ϋύ΅2
+>python:S125ς"Remove this commented out code.(κ†ω›8Πª¨2
+Cpython:S125ύ"Remove this commented out code.(ΏΨσϋÿÿÿÿ8Ψ«Ϋύ΅2

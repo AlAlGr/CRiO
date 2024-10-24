@@ -46,7 +46,7 @@ dp = Dispatcher()
 
 async def check_and_notify_users():
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text='Собрать CRiO', url=MINI_APP_URL)]
+        [InlineKeyboardButton(text='Собрать DGEM', url=MINI_APP_URL)]
         ])
 
     while True:

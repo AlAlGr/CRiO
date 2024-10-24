@@ -46,7 +46,7 @@ class User(models.Model):
         return self.points >= character.cost and character.id == self.character_id + 1
 
     def can_buy_boosters(self, boosters) -> bool:
-        return self.points >= boosters.cost and boosters.id == self.booster_id + 1
+        return self.points >= boosters.cost
 
     def buy_character(self, character) -> bool:
         if self.can_buy_character(character):
@@ -121,6 +121,11 @@ class Booster(models.Model):
         self.last_collected = now
         self.save()
         return points
+
+class UserBooster(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='boosters')  # Связь с пользователем
+    booster = models.ForeignKey(Booster, on_delete=models.CASCADE)  # Связь с бустером
+    quantity = models.IntegerField(default=0)  # Количество купленных бустеров
 
 class Task(models.Model):
     id = models.IntegerField(primary_key=True)

@@ -127,34 +127,58 @@
 
     <!-- Контент с персонажами -->
     <div class="content">
-        {% for booster in boosters %}
-        <div class="character-item">
-            <div class="character-name">{{ booster.name }}</div> <!-- Название персонажа -->
-            <img src="/static/images/boosters_{{ booster.id }}.jpg" alt="Character Icon"> <!-- Иконка персонажа -->
-            <div class="character-info">
-                <p>Стоимость: {{ booster.cost }}</p>
-                <p>+ <span class="highlight">DGEM</span> в час: {{ booster.points_per_hour }}</p>
-            </div>
-            <div class="button-container">
-                {% if next_booster_id == booster.id %}
-                    {% if user.points >= booster.cost %}
+    {% for booster in boosters %}
+    <div class="character-item">
+        <div class="character-name">{{ booster.name }}</div> <!-- Название бустера -->
+        <img src="/static/images/boosters_{{ booster.id }}.jpg" alt="Booster Icon"> <!-- Иконка бустера -->
+        <div class="character-info">
+            <p>Стоимость: {{ booster.cost }}</p>
+            <p>+ <span class="highlight">DGEM</span> в час: {{ booster.points_per_hour }}</p>
+            <p>Куплено раз:
+                {{ booster_quantities|get_item:booster.id|default:0 }} / 3
+            </p> <!-- Количество покупок -->
+        </div>
+        <div class="button-container">
+            {% if booster.id == 1 %}
+                <!-- Условие для первого бустера -->
+                {% if user.points >= booster.cost %}
+                    {% if booster_quantities|get_item:booster.id|default:0 < 3 %}
                         <form method="post" style="display: inline;">
                             {% csrf_token %}
                             <input type="hidden" name="booster_id" value="{{ booster.id }}">
                             <button type="submit">Купить</button>
                         </form>
                     {% else %}
-                        <div class="insufficient-points"><span style="font-size: 1.3em;">Недостаточно <span class="highlight">CRiO</span> TOKEN</span></div>
                     {% endif %}
-                {% elif user.booster_id >= booster.id %}
-                    <!-- Ничего не отображаем, если персонаж уже куплен -->
                 {% else %}
-                    <!-- Ничего не отображаем, если персонаж недоступен -->
+                    <div class="insufficient-points"><span style="font-size: 1.3em;">Недостаточно <span class="highlight">DGEM</span> TOKEN</span></div>
                 {% endif %}
-            </div>
+            {% elif next_booster_id == booster.id %}
+                <!-- Для всех остальных бустеров -->
+                {% if previous_booster_completed %}
+                    {% if user.points >= booster.cost %}
+                        {% if booster_quantities|get_item:booster.id|default:0 < 3 %}
+                            <form method="post" style="display: inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="booster_id" value="{{ booster.id }}">
+                                <button type="submit">Купить</button>
+                            </form>
+                        {% else %}
+                        {% endif %}
+                    {% else %}
+                        <div class="insufficient-points"><span style="font-size: 1.3em;">Недостаточно <span class="highlight">DGEM</span> TOKEN</span></div>
+                    {% endif %}
+                {% else %}
+                    <div class="insufficient-points"><span style="font-size: 1.3em;">Предыдущий бустер не куплен 3 раза</span></div>
+                {% endif %}
+            {% endif %}
         </div>
-        {% endfor %}
     </div>
+    {% endfor %}
+</div>
+
+
+
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
