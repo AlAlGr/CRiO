@@ -14,7 +14,7 @@ from pytoniq_core import Address
 
 from .connector import get_connector
 from telegram_miniapp.tc_storage import TcStorage
-from .models import User, Task, Wallet, Character, Improvement, Booster, Club, UserTask
+from .models import User, Task, Wallet, Character, Improvement, Booster, Club, UserTask, UserBooster
 from bot import BOT_URL, command_wallet, connect_wallet
 
 
@@ -178,24 +178,74 @@ def buy_boosters_view(request):
     user_id = request.GET.get('user_id')
     user = User.objects.get(user_id=user_id)
 
+    # Получаем все бустеры
     boosters = Booster.objects.all()
 
+    # Определяем следующий доступный бустер
     next_booster_id = user.booster_id + 1
 
     if request.method == 'POST':
         booster_id = int(request.POST.get('booster_id'))
         booster = Booster.objects.get(id=booster_id)
 
-        if user.buy_boosters(booster):
-            return redirect(f'/home2/?user_id={user_id}')
+        # Получаем информацию о том, сколько раз пользователь уже купил этот бустер
+        user_booster, created = UserBooster.objects.get_or_create(user=user, booster=booster)
 
+        # Проверяем, что пользователь не купил бустер более 3 раз
+        if user_booster.quantity >= 3:
+            return redirect(f'/home2/?user_id={user_id}')  # Если бустер куплен 3 раза, больше нельзя покупать
+
+        # Проверяем, есть ли у пользователя достаточное количество токенов для покупки бустера
+        if user.points < booster.cost:
+            return redirect(f'/home2/?user_id={user_id}')  # Недостаточно токенов, просто перезагружаем
+
+        # Покупка бустера
+        user_booster.quantity += 1  # Увеличиваем количество покупок
+        user_booster.save()
+
+        # Проверяем, куплен ли текущий бустер 3 раза. Если да, разрешаем следующий бустер.
+        if user_booster.quantity == 3:
+            user.booster_id += 1  # Разрешаем покупку следующего бустера
+            user.save()
+
+        # Вычитаем стоимость бустера из количества токенов пользователя
+        user.points -= booster.cost
+        user.save()
+
+        # После покупки перенаправляем пользователя, чтобы обновить состояние страницы
+        return redirect(f'/home2/?user_id={user_id}')
+
+    # Собираем информацию о количестве купленных бустеров для отображения в шаблоне
+    user_boosters = UserBooster.objects.filter(user=user)
+    booster_quantities = {ub.booster.id: ub.quantity for ub in user_boosters}
+
+    # Проверка условий для покупки следующего бустера
+    previous_booster_completed = False
+    if user.booster_id > 0:
+        previous_booster = Booster.objects.get(id=user.booster_id)
+
+        previous_user_booster = UserBooster.objects.filter(user=user, booster=previous_booster).first()
+
+        # Проверяем, завершён ли предыдущий бустер
+        if previous_user_booster and previous_user_booster.quantity >= 3:
+            previous_booster_completed = True
     context = {
         'user': user,
         'boosters': boosters,
-        "next_booster_id": next_booster_id
+        "next_booster_id": next_booster_id,
+        'booster_quantities': booster_quantities,  #
+        'previous_booster_completed': previous_booster_completed  # Добавляем информацию, завершен ли предыдущий бустер
     }
 
     return render(request, 'buy_boosters.html', context)
+
+
+
+
+
+
+
+
 
 
 def collect_points_view(request):
