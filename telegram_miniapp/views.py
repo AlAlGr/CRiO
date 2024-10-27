@@ -144,7 +144,7 @@ def frens_view(request):
     context = {
         'ref_users': ref_users,
         'count_ref_users': len(ref_users),
-        'total_earn': len(ref_users) * 0.001,
+        'total_earn': len(ref_users) * 100,
         'share_link': f'{BOT_URL}?start={user_id}'
     }
 
@@ -191,8 +191,8 @@ def buy_boosters_view(request):
         # Получаем информацию о том, сколько раз пользователь уже купил этот бустер
         user_booster, created = UserBooster.objects.get_or_create(user=user, booster=booster)
 
-        # Проверяем, что пользователь не купил бустер более 3 раз
-        if user_booster.quantity >= 3:
+        # Проверяем, что пользователь не купил бустер более 20 раз
+        if user_booster.quantity >= 20:
             return redirect(f'/home2/?user_id={user_id}')  # Если бустер куплен 3 раза, больше нельзя покупать
 
         # Проверяем, есть ли у пользователя достаточное количество токенов для покупки бустера
@@ -203,17 +203,15 @@ def buy_boosters_view(request):
         user_booster.quantity += 1  # Увеличиваем количество покупок
         user_booster.save()
 
-        # Проверяем, куплен ли текущий бустер 3 раза. Если да, разрешаем следующий бустер.
-        if user_booster.quantity == 3:
+        if user_booster.quantity == 5:
             user.booster_id += 1  # Разрешаем покупку следующего бустера
             user.save()
 
-        # Вычитаем стоимость бустера из количества токенов пользователя
+        user.points_per_hour += booster.points_per_hour
         user.points -= booster.cost
         user.save()
 
-        # После покупки перенаправляем пользователя, чтобы обновить состояние страницы
-        return redirect(f'/home2/?user_id={user_id}')
+        return redirect(f'/buy/booster/?user_id={user_id}')
 
     # Собираем информацию о количестве купленных бустеров для отображения в шаблоне
     user_boosters = UserBooster.objects.filter(user=user)
@@ -227,25 +225,17 @@ def buy_boosters_view(request):
         previous_user_booster = UserBooster.objects.filter(user=user, booster=previous_booster).first()
 
         # Проверяем, завершён ли предыдущий бустер
-        if previous_user_booster and previous_user_booster.quantity >= 3:
+        if previous_user_booster and previous_user_booster.quantity >= 5:
             previous_booster_completed = True
     context = {
         'user': user,
         'boosters': boosters,
         "next_booster_id": next_booster_id,
-        'booster_quantities': booster_quantities,  #
-        'previous_booster_completed': previous_booster_completed  # Добавляем информацию, завершен ли предыдущий бустер
+        'booster_quantities': booster_quantities,
+        'previous_booster_completed': previous_booster_completed
     }
 
     return render(request, 'buy_boosters.html', context)
-
-
-
-
-
-
-
-
 
 
 def collect_points_view(request):

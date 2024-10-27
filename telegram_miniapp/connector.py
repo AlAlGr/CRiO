@@ -7,7 +7,7 @@ from base64 import urlsafe_b64encode
 
 from pytoniq_core import begin_cell
 
-MANIFEST_URL='https://raw.githubusercontent.com/AlAlGr/CRiO/main/manifest.json'
+MANIFEST_URL='https://raw.githubusercontent.com/AlAlGr/DgemWallet/main/manifest.json'
 
 def get_connector(chat_id: int):
     return TonConnect(MANIFEST_URL, storage=TcStorage(chat_id))

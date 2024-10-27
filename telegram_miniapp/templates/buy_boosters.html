@@ -135,14 +135,14 @@
             <p>Стоимость: {{ booster.cost }}</p>
             <p>+ <span class="highlight">DGEM</span> в час: {{ booster.points_per_hour }}</p>
             <p>Куплено раз:
-                {{ booster_quantities|get_item:booster.id|default:0 }} / 3
+                {{ booster_quantities|get_item:booster.id|default:0 }} / 20
             </p> <!-- Количество покупок -->
         </div>
         <div class="button-container">
             {% if booster.id == 1 %}
                 <!-- Условие для первого бустера -->
                 {% if user.points >= booster.cost %}
-                    {% if booster_quantities|get_item:booster.id|default:0 < 3 %}
+                    {% if booster_quantities|get_item:booster.id|default:0 < 5 %}
                         <form method="post" style="display: inline;">
                             {% csrf_token %}
                             <input type="hidden" name="booster_id" value="{{ booster.id }}">
@@ -157,7 +157,7 @@
                 <!-- Для всех остальных бустеров -->
                 {% if previous_booster_completed %}
                     {% if user.points >= booster.cost %}
-                        {% if booster_quantities|get_item:booster.id|default:0 < 3 %}
+                        {% if booster_quantities|get_item:booster.id|default:0 < 5 %}
                             <form method="post" style="display: inline;">
                                 {% csrf_token %}
                                 <input type="hidden" name="booster_id" value="{{ booster.id }}">
@@ -169,7 +169,7 @@
                         <div class="insufficient-points"><span style="font-size: 1.3em;">Недостаточно <span class="highlight">DGEM</span> TOKEN</span></div>
                     {% endif %}
                 {% else %}
-                    <div class="insufficient-points"><span style="font-size: 1.3em;">Предыдущий бустер не куплен 3 раза</span></div>
+                    <div class="insufficient-points"><span style="font-size: 1.3em;">Предыдущий бустер не куплен 5 раза</span></div>
                 {% endif %}
             {% endif %}
         </div>

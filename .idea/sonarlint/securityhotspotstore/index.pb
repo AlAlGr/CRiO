@@ -528,3 +528,5 @@ Ytelegram_miniapp/migrations/0018_remove_task_description_remove_task_end_date_a
 .telegram_miniapp/static/images/cryptoner_6.jpg,b/c/bc469f9ea992b7175a68c332acd7408b6f64bcc6
 W
 'telegram_miniapp/static/images/coin.jpg,d/6/d66289e836e75897b431743e564f1b45b051ea08
+_
+/telegram_miniapp/migrations/0019_userbooster.py,8/5/855509512f9553d504e65e01d6aeec9cc711da9f

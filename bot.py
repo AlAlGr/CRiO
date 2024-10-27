@@ -118,7 +118,7 @@ async def start_deep_link(message: types.Message, command: CommandObject):
 
         keyboard = InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(text='Открыть Mini App', url=MINI_APP_URL)],
-            [InlineKeyboardButton(text='Пригласить друга', callback_data='invite')]
+            [InlineKeyboardButton(text='Подпишись на DGEM сообщество', url="https://t.me/@DgemToken")]
         ])
 
         if ref_id is not None:
@@ -143,7 +143,7 @@ async def start(message: types.Message):
 
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text='Открыть Mini App', url=MINI_APP_URL)],
-        [InlineKeyboardButton(text='Пригласить друга', callback_data='invite')]
+        [InlineKeyboardButton(text='Подпишись на DGEM сообщество', url="https://t.me/@DgemToken")]
     ])
 
     await message.answer("Привет! Нажмите кнопку ниже, и начнется автоматический фарминг DGEM TOKEN. Бот вам отправит сообщение через 8 часов , чтоб вы забрали свои токены .", reply_markup=keyboard)

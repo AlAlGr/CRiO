@@ -1,8 +1,9 @@
 
-Ppython:S1481"1Replace unused local variable "created" with "_".(‚†àŽ8¹îËµ§2
-Rpython:S1481Ð"-Remove the unused local variable "character".(ìÓõÊùÿÿÿÿ8ºîËµ§2
-Cpython:S125œ"Remove this commented out code.(òó•Øüÿÿÿÿ8ºîËµ§2
->python:S125¹"Remove this commented out code.(üö¸Š8ºîËµ§2
-Ypython:S1481ä"4Remove the unused local variable "is_telegram_user".(€Ç˜Ÿùÿÿÿÿ8ìÎÑµ§2
-\python:S5754å"<Specify an exception class to catch or reraise the exception(ˆÊÉ·8»îËµ§2
-^python:S1143é"9Remove this "return" statement from this "finally" block.(•ïãäüÿÿÿÿ8ðÎÑµ§2
+Ppython:S1481"1Replace unused local variable "created" with "_".(‚†àŽ8­’—ö«2
+Vpython:S1481À"1Replace unused local variable "created" with "_".(œÑÜ•ýÿÿÿÿ8øØ¤ö«2
+Rpython:S1481‚"-Remove the unused local variable "character".(ìÓõÊùÿÿÿÿ8¶—å÷«2
+Cpython:S125Î"Remove this commented out code.(òó•Øüÿÿÿÿ8¶—å÷«2
+>python:S125ë"Remove this commented out code.(üö¸Š8·—å÷«2
+Ypython:S1481–"4Remove the unused local variable "is_telegram_user".(€Ç˜Ÿùÿÿÿÿ8·—å÷«2
+\python:S5754—"<Specify an exception class to catch or reraise the exception(ˆÊÉ·8·—å÷«2
+^python:S1143›"9Remove this "return" statement from this "finally" block.(•ïãäüÿÿÿÿ8·—å÷«2

@@ -23,7 +23,7 @@
 
         .header {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             padding: 10px 20px;
             font-size: 1.2em;
@@ -32,14 +32,17 @@
             margin: 20px;
         }
 
-        .header .left, .header .right {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            text-align: center;
+        .header .left {
+            display: flex; /* Устанавливаем flex для размещения в строку */
+            gap: 10px; /* Добавляем расстояние между элементами */
+            align-items: center; /* Выровнять по центру по вертикали */
+            line-height: 1.5; /* Единое значение для выравнивания по линии */
         }
 
+        .header .character-name,
+        .header .level {
+            line-height: 1.5; /* Устанавливаем одинаковое значение для выравнивания текста */
+        }
         .header .level {
             color: yellow;
             font-size: 1em;
@@ -66,8 +69,8 @@
         }
 
         .coin-image {
-            width: 290px;
-            height: 290px;
+            width: 330px;
+            height: 330px;
             margin: 20px auto; /* Центрирование монетки с небольшими отступами */
         }
 
@@ -198,16 +201,6 @@
         <div class="left">
             <div class="character-name">{{ character.name }}</div>
             <div class="level">Level {{ character.id }}</div>
-        </div>
-        <div class="right">
-            {% if club %}
-                <div class="club-name">
-                    <img src="/static/images/club_photo_{{ user.user_id }}.jpg" alt="Club Logo" class="club-image"> <!-- Добавляем изображение клуба -->
-                </div> <!-- Название клуба -->
-                <div class="club-members">{{ club.name }} {{ club.count_members }} m</div> <!-- Количество участников клуба -->
-            {% else %}
-                <div class="club-name">Ты не вошёл в сквад</div>
-            {% endif %}
         </div>
     </div>
 

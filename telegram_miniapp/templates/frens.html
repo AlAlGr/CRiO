@@ -62,12 +62,16 @@
         .users-list {
             width: 100%;
             max-width: 600px;
+            max-height: 300px; /* Ограничение высоты списка пользователей */
+            overflow-y: auto; /* Прокрутка, если список превышает высоту */
             margin-top: 20px; /* Уменьшили расстояние до контейнера */
             list-style-type: none;
             padding: 0;
             flex-grow: 0; /* Контейнер не будет растягиваться */
+            border-top: 1px solid #fff; /* Добавить границу сверху для отделения от контента */
         }
 
+        /* Стили для элементов списка остаются без изменений */
         .users-list li {
             padding: 15px 0;
             display: flex;
@@ -112,7 +116,7 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
         function sendInvite() {
-            window.location.href = 'https://t.me/share/url?url={{ share_link }}&text=Mine DGEM TOKEN and earn a TON !';
+            window.location.href = 'https://t.me/share/url?url={{ share_link }}&text=Mine DGEM TOKEN and earn a DOGS !';
         }
     </script>
 </head>
@@ -132,9 +136,9 @@
         <div class="box">
             <div class="earn-container">
                 <span>Earn</span>
-                <img src="/static/images/toncoin-ton-logo.png" alt="Coin Image"> <!-- Добавляем изображение справа -->
+                <img src="/static/images/dogs-logo.png" alt="Coin Image"> <!-- Добавляем изображение справа -->
             </div>
-            <div>{{ total_earn }} TON</div>
+            <div>{{ total_earn }} DOGS</div>
         </div>
     </div>
 
@@ -149,7 +153,7 @@
     </ul>
 
     <!-- Invite button -->
-    <button class="invite-btn" onclick="sendInvite()">Пригласить друга</button>
+    <button class="invite-btn" onclick="sendInvite()">Пригласить друга<br><p style="font-size: 19px">Получи 1000 DGEM / 100 DOGS</p></button>
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
