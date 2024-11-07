@@ -132,7 +132,7 @@
         <div class="character-name">{{ booster.name }}</div> <!-- Название бустера -->
         <img src="/static/images/boosters_{{ booster.id }}.jpg" alt="Booster Icon"> <!-- Иконка бустера -->
         <div class="character-info">
-            <p>Стоимость: {{ booster.cost }}</p>
+            <p>Стоимость: {{ booster|calculate_cost:booster_quantities }}</p>
             <p>+ <span class="highlight">DGEM</span> в час: {{ booster.points_per_hour }}</p>
             <p>Куплено раз:
                 {{ booster_quantities|get_item:booster.id|default:0 }} / 20
@@ -142,7 +142,7 @@
             {% if booster.id == 1 %}
                 <!-- Условие для первого бустера -->
                 {% if user.points >= booster.cost %}
-                    {% if booster_quantities|get_item:booster.id|default:0 < 5 %}
+                    {% if booster_quantities|get_item:booster.id|default:0 < 20 %}
                         <form method="post" style="display: inline;">
                             {% csrf_token %}
                             <input type="hidden" name="booster_id" value="{{ booster.id }}">
@@ -157,7 +157,7 @@
                 <!-- Для всех остальных бустеров -->
                 {% if previous_booster_completed %}
                     {% if user.points >= booster.cost %}
-                        {% if booster_quantities|get_item:booster.id|default:0 < 5 %}
+                        {% if booster_quantities|get_item:booster.id|default:0 < 20 %}
                             <form method="post" style="display: inline;">
                                 {% csrf_token %}
                                 <input type="hidden" name="booster_id" value="{{ booster.id }}">

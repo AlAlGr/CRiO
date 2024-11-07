@@ -179,7 +179,7 @@ def buy_boosters_view(request):
     user = User.objects.get(user_id=user_id)
 
     # Получаем все бустеры
-    boosters = Booster.objects.all()
+    boosters = Booster.objects.all().order_by('id')
 
     # Определяем следующий доступный бустер
     next_booster_id = user.booster_id + 1
@@ -208,7 +208,7 @@ def buy_boosters_view(request):
             user.save()
 
         user.points_per_hour += booster.points_per_hour
-        user.points -= booster.cost
+        user.points -= int(float(booster.cost) + (float(booster.cost) * (0.02 * (float(user_booster.quantity) - 1))))
         user.save()
 
         return redirect(f'/buy/booster/?user_id={user_id}')

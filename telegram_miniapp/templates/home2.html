@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
     <title>Home</title>
     <style>
         body {
@@ -37,12 +36,15 @@
             gap: 10px; /* Добавляем расстояние между элементами */
             align-items: center; /* Выровнять по центру по вертикали */
             line-height: 1.5; /* Единое значение для выравнивания по линии */
+            flex-wrap: wrap; /* Разрешаем перенос элементов */
         }
 
         .header .character-name,
-        .header .level {
+        .header .level,
+        .header .username {
             line-height: 1.5; /* Устанавливаем одинаковое значение для выравнивания текста */
         }
+
         .header .level {
             color: yellow;
             font-size: 1em;
@@ -51,16 +53,12 @@
         .header .character-name {
             font-size: 1em;
             margin-right: 10px;
-            margin-bottom: 5px;
+            /* Убираем margin-bottom для выравнивания по высоте */
+            /* margin-bottom: 5px; */
         }
 
-        .header .squad {
-            color: white;
-        }
-
-        .username {
-            margin: 1px 0;
-            font-size: 1.8em;
+        .header .username {
+            font-size: 1em;
         }
 
         .points {
@@ -74,16 +72,12 @@
             margin: 20px auto; /* Центрирование монетки с небольшими отступами */
         }
 
-        .farming-info {
-            font-size: 1.2em;
-            color: yellow;
-        }
-
-        /* Изменено: размещение button-container для корректного отображения */
         .button-container {
-            margin-top: auto; /* Автоматический отступ сверху для перемещения кнопки вниз */
+            margin-top: auto; /* Автоматический отступ сверху для перемещения вниз */
             margin-bottom: 20px; /* Нижний отступ */
             padding: 20px; /* Внутренние отступы для кнопки */
+            width: 100%; /* Занимает всю доступную ширину */
+            box-sizing: border-box; /* Включаем padding в общую ширину */
         }
 
         .button-container button {
@@ -96,7 +90,7 @@
             cursor: pointer;
             width: 100%; /* Занимает всю доступную ширину */
             max-width: 320px; /* Ограничиваем максимальную ширину кнопки */
-            margin: 0 auto; /* Центрирование кнопки */
+            margin: 0 auto; /* Центрировка кнопки */
         }
 
         .button-container button:disabled {
@@ -109,7 +103,6 @@
             color: black;
         }
 
-        /* Обновлено: фиксируем нижний футер с учётом высоты экрана */
         .footer {
             position: sticky; /* Закрепляем футер внизу экрана */
             bottom: 0;
@@ -121,6 +114,7 @@
             border-radius: 10px;
             gap: 10px;
             margin-bottom: 20px; /* Увеличенный нижний отступ */
+            flex-wrap: wrap; /* Разрешаем перенос элементов при необходимости */
         }
 
         .footer div {
@@ -133,65 +127,61 @@
             border: 2px solid green;
             border-radius: 10px;
             background-color: rgba(0, 0, 0, 0.5);
+            flex: 1; /* Элементы занимают равное пространство */
+            max-width: 100px; /* Ограничиваем максимальную ширину элементов */
         }
 
         .footer a {
             text-decoration: none;
             color: inherit;
+            flex: 1; /* Элементы занимают равное пространство */
         }
 
         .highlight {
             color: yellow;
         }
 
-        .right .club-image {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%; /* Круглое изображение */
-            object-fit: cover; /* Сохранение пропорций изображения */
-            margin: 0 auto; /* Центрирование изображения */
-        }
-
-        /* Стили для текста в блоке .right */
-        .right .club-name {
-            font-size: 0.7em;
-            margin-top: 3px;
-            font-weight: bold;
+        .img_points {
             text-align: center;
+            padding: 2px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-    .right .club-members {
-        font-size: 0.7em;
-        margin-top: 2px;
-        text-align: center;
-        color: #ffffff;
-    }
-    .vertical-line {
-        width: 1px; /* Ширина линии */
-        background-color: white; /* Цвет линии */
-        margin: 0 20px; /* Отступы слева и справа */
-    }
-    .img_points {
-        text-align: center;
-        padding: 2px 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+        @media (max-width: 600px) {
+            /* Адаптивные стили для маленьких экранов */
+            .header {
+                flex-direction: column;
+            }
+            .header .left {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .button-container button {
+                max-width: 100%;
+            }
+            .footer div {
+                flex: 1 1 45%;
+                max-width: none;
+                margin-bottom: 10px;
+            }
+        }
     </style>
 </head>
 <body>
-     {% load custom_filters %}
+    {% load custom_filters %}
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
-                // Обработчик события возврата на страницу
+        // Обработчик события возвращения на страницу
         window.addEventListener('pageshow', function(event) {
             if (event.persisted || window.performance && window.performance.navigation.type === 2) {
-                // Если пользователь вернулся на страницу или она загружена из кэша
+                // Если пользователь вернулся на страницу или она загружена из кеша
                 window.location.reload();  // Перезагружаем страницу
             }
         });
-            // Инициализация Telegram Web App
+        // Инициализация Telegram Web App
         const tg = window.Telegram.WebApp;
 
         tg.BackButton.hide();  // Убираем кнопку
@@ -201,21 +191,19 @@
         <div class="left">
             <div class="character-name">{{ character.name }}</div>
             <div class="level">Level {{ character.id }}</div>
+            <div class="username">{{ user.first_name }}</div>
         </div>
     </div>
 
-    <!-- Имя пользователя -->
-    <div class="username">{{ user.first_name }}</div>
-
     <!-- Очки пользователя -->
-     <div class="img_points">
+    <div class="img_points">
         <img src="/static/images/coin.png" alt="CRiO Coin" style="margin-right: 10px; width: 40px; height: 40px;">
         <div class="points">{{ user.points|format_points }}</div>
-     </div>
+    </div>
 
     <img src="/static/images/cryptoner_{{ character.id }}.jpg" alt="" class="coin-image">
 
-    <!-- Кнопка для сборки монет -->
+    <!-- Кнопка для сбора монет -->
     <div class="button-container">
         <button id="collect-points-button" disabled>
             <div>Farming <span class="highlight">DGEM</span></div>
