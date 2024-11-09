@@ -29,19 +29,25 @@
             border-radius: 10px;
             border: 3px solid white;
             margin: 20px;
+            flex-direction: column; /* Делаем элементы вертикальными */
+        }
+
+        .username {
+            font-size: 2em; /* Увеличиваем размер шрифта */
+            margin-bottom: 10px;
         }
 
         .header .left {
             display: flex; /* Устанавливаем flex для размещения в строку */
             gap: 10px; /* Добавляем расстояние между элементами */
-            align-items: center; /* Выровнять по центру по вертикали */
+            align-items: center; /* Выравнять по центру по вертикали */
             line-height: 1.5; /* Единое значение для выравнивания по линии */
             flex-wrap: wrap; /* Разрешаем перенос элементов */
+            justify-content: center; /* Центрируем элементы по горизонтали */
         }
 
         .header .character-name,
-        .header .level,
-        .header .username {
+        .header .level {
             line-height: 1.5; /* Устанавливаем одинаковое значение для выравнивания текста */
         }
 
@@ -53,12 +59,6 @@
         .header .character-name {
             font-size: 1em;
             margin-right: 10px;
-            /* Убираем margin-bottom для выравнивания по высоте */
-            /* margin-bottom: 5px; */
-        }
-
-        .header .username {
-            font-size: 1em;
         }
 
         .points {
@@ -75,7 +75,7 @@
         .button-container {
             margin-top: auto; /* Автоматический отступ сверху для перемещения вниз */
             margin-bottom: 20px; /* Нижний отступ */
-            padding: 20px; /* Внутренние отступы для кнопки */
+            padding: 20px; /* Внутренний отступ для кнопки */
             width: 100%; /* Занимает всю доступную ширину */
             box-sizing: border-box; /* Включаем padding в общую ширину */
         }
@@ -90,7 +90,7 @@
             cursor: pointer;
             width: 100%; /* Занимает всю доступную ширину */
             max-width: 320px; /* Ограничиваем максимальную ширину кнопки */
-            margin: 0 auto; /* Центрировка кнопки */
+            margin: 0 auto; /* Центировка кнопки */
         }
 
         .button-container button:disabled {
@@ -174,7 +174,7 @@
     {% load custom_filters %}
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
-        // Обработчик события возвращения на страницу
+        // Обработчик события на случай возвращения на страницу
         window.addEventListener('pageshow', function(event) {
             if (event.persisted || window.performance && window.performance.navigation.type === 2) {
                 // Если пользователь вернулся на страницу или она загружена из кеша
@@ -188,10 +188,10 @@
     </script>
 
     <div class="header">
+        <div class="username">{{ user.first_name }}</div>
         <div class="left">
             <div class="character-name">{{ character.name }}</div>
             <div class="level">Level {{ character.id }}</div>
-            <div class="username">{{ user.first_name }}</div>
         </div>
     </div>
 
